@@ -6,6 +6,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Take;
+use App\Course;
+use App\Forum;
+use App\ForumAnswer;
+use App\RegisteredCourse;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -46,6 +51,27 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function take()
+    {
+        return $this->hasMany(Take::class);
+    }
+    public function course()
+    {
+        return $this->hasMany(Course::class);
+    }
+    public function forum()
+    {
+        return $this->hasMany(Forum::class);
+    }
+    public function forum_answer()
+    {
+        return $this->hasMany(ForumAnswer::class);
+    }
+    public function registered_course()
+    {
+        return $this->hasMany(RegisteredCourse::class);
     }
 
 }
