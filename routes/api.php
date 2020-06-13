@@ -27,5 +27,5 @@ Route::get('logout', 'Api\AuthController@logout');
 
 Route::post('course', 'Api\CoursesController@create')->middleware('jwtAuth');
 Route::post('exam', 'Api\ExamsController@create')->middleware('jwtAuth');
-Route::post('forum', 'Api\ForumsController@open')->middleware('jwtAuth');
+Route::post('forum', 'Api\ForumsController@create')->middleware('jwtAuth');
 Route::post('subject', 'Api\SubjectsController@create')->middleware('jwtAuth');
