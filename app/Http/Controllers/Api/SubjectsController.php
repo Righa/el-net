@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Subject;
+use App\Course;
+use DB;
 
 class SubjectsController extends Controller
 {
@@ -14,7 +17,9 @@ class SubjectsController extends Controller
      */
     public function index()
     {
-        //
+        $subjects = Subject::all();
+
+        return response()->json($subjects);
     }
 
     /**
@@ -38,7 +43,17 @@ class SubjectsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $subject = new Subject;
+
+        $subject->name = $request->name;
+        $subject->description = $request->description;
+
+        $subject->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'subject was created'
+        ]);
     }
 
     /**
@@ -49,7 +64,13 @@ class SubjectsController extends Controller
      */
     public function show($id)
     {
-        //
+        $subject = Subject::find($id);
+        $courses = Course::all();
+
+        return response()->json([
+            'subject' => $subject,
+            'courses' => $courses
+        ]);
     }
 
     /**
@@ -72,7 +93,17 @@ class SubjectsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $subject = Subject::find($id);
+
+        $subject->name = $request->name;
+        $subject->description = $request->description;
+
+        $subject->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'subject was updated'
+        ]);
     }
 
     /**
@@ -83,6 +114,11 @@ class SubjectsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('subjects')->where('id', $id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'subject was deleted'
+        ]);
     }
 }

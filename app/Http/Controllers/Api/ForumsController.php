@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Forum;
+use App\ForumAnswer;
+use DB;
 
 class ForumsController extends Controller
 {
@@ -14,7 +17,9 @@ class ForumsController extends Controller
      */
     public function index()
     {
-        //
+        $forums = Forum::all();
+
+        return response()->json($forums);
     }
 
     /**
@@ -38,7 +43,19 @@ class ForumsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $forum = new Forum;
+
+        $forum->student_id = $request->student_id;
+        $forum->subject_id = $request->subject_id;
+        $forum->question = $request->question;
+        $forum->votes = $request->votes;
+
+        $forum->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'forum was created'
+        ]);
     }
 
     /**
@@ -49,7 +66,13 @@ class ForumsController extends Controller
      */
     public function show($id)
     {
-        //
+        $forum = Forum::find($id);
+        $answers = ForumAnswer::all();
+
+        return response()->json([
+            'forum' => $forum,
+            'answers' => $answers
+        ]);
     }
 
     /**
@@ -72,7 +95,19 @@ class ForumsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $forum = Forum::find($id);
+
+        $forum->student_id = $request->student_id;
+        $forum->subject_id = $request->subject_id;
+        $forum->question = $request->question;
+        $forum->votes = $request->votes;
+
+        $forum->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'forum was updated'
+        ]);
     }
 
     /**
@@ -83,7 +118,12 @@ class ForumsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('forums')->where('id', $id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'forum was deleted'
+        ]);
     }
 
 
@@ -97,9 +137,29 @@ class ForumsController extends Controller
 		# all c
 	}
 
-	public function answer()
+
+    /**
+     * Add forum answer. might need a separate controller for functions in this section
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+	public function answer(Request $request, $id)
 	{
-		# all c
+        $answer = new ForumAnswer;
+
+        $answer->user_id = $request->user_id;
+        $answer->forum_id = $id;
+        $answer->answer = $request->answer;
+
+        $answer->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'forum was answered'
+        ]);
 	}
 	public function vote()
 	{

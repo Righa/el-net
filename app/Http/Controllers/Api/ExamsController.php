@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Exam;
+use DB;
 
 class ExamsController extends Controller
 {
@@ -14,7 +16,9 @@ class ExamsController extends Controller
      */
     public function index()
     {
-        //
+        $exams = Exam::all();
+
+        return response()->json($exams);
     }
 
     /**
@@ -38,7 +42,21 @@ class ExamsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $exam = new Exam;
+        $exam->course_id = $request->course_id;
+        $exam->name = $request->name;
+        $exam->takes_allowed = $request->takes_allowed;
+        $exam->duration = $request->duration;
+        $exam->password = $request->password;
+        $exam->open = $request->open;
+        $exam->close = $request->close;
+
+        $exam->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'exam was created'
+        ]);
     }
 
     /**
@@ -49,7 +67,9 @@ class ExamsController extends Controller
      */
     public function show($id)
     {
-        //
+        $exam = Exam::find($id);
+
+        return response()->json($exam);
     }
 
     /**
@@ -72,7 +92,21 @@ class ExamsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $exam = Exam::find($id);
+        $exam->course_id = $request->course_id;
+        $exam->name = $request->name;
+        $exam->takes_allowed = $request->takes_allowed;
+        $exam->duration = $request->duration;
+        $exam->password = $request->password;
+        $exam->open = $request->open;
+        $exam->close = $request->close;
+
+        $exam->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'exam was updated'
+        ]);
     }
 
     /**
@@ -83,7 +117,12 @@ class ExamsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('exams')->where('id', $id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'exam was deleted'
+        ]);
     }
 
 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Course;
+use DB;
 
 class CoursesController extends Controller
 {
@@ -14,7 +16,8 @@ class CoursesController extends Controller
      */
     public function index()
     {
-        //
+        $courses = Course::all();
+        return response()->json($courses);
     }
 
     /**
@@ -38,7 +41,19 @@ class CoursesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $course = new Course;
+        $course->subject_id = $request->subject_id;
+        $course->teacher_id = $request->teacher_id;
+        $course->name = $request->name;
+        $course->description = $request->description;
+        $course->password = $request->password;
+
+        $course->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Course has been created'
+        ]);
     }
 
     /**
@@ -49,7 +64,9 @@ class CoursesController extends Controller
      */
     public function show($id)
     {
-        //
+        $course = Course::find($id);
+
+        return response()->json($course);
     }
 
     /**
@@ -72,7 +89,20 @@ class CoursesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $course = Course::find($id);
+
+        $course->subject_id = $request->subject_id;
+        $course->teacher_id = $request->teacher_id;
+        $course->name = $request->name;
+        $course->description = $request->description;
+        $course->password = $request->password;
+
+        $course->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Course has been updated'
+        ]);
     }
 
     /**
@@ -83,7 +113,12 @@ class CoursesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('courses')->where('id',$id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Course has been deleted'
+        ]);
     }
 
 
