@@ -21,19 +21,6 @@ class CoursesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-		return response()->json([
-            'success' => true,
-            'message' => 'create course'
-        ]);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -65,19 +52,9 @@ class CoursesController extends Controller
     public function show($id)
     {
         $course = Course::find($id);
+        $material = $course->material;
 
         return response()->json($course);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -89,19 +66,17 @@ class CoursesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $course = Course::find($id);
-
-        $course->subject_id = $request->subject_id;
-        $course->teacher_id = $request->teacher_id;
-        $course->name = $request->name;
-        $course->description = $request->description;
-        $course->password = $request->password;
-
-        $course->save();
+        $affected = DB::table('courses')->where('id', $id)->update([
+            'subject_id' => $request->subject_id,
+            'teacher_id' => $request->teacher_id,
+            'name' => $request->name,
+            'description' => $request->description,
+            'password' => $request->password
+        ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Course has been updated'
+            'message' => $affected.' course has been updated'
         ]);
     }
 
@@ -120,47 +95,4 @@ class CoursesController extends Controller
             'message' => 'Course has been deleted'
         ]);
     }
-
-
-
-
-
-
-
-   
-	public function addTopic()
-	{
-		# all c
-	}
-	public function removeTopic()
-	{
-		# all c
-	}
-	public function addMaterial()
-	{
-		# all c
-	}
-	public function removeMaterial()
-	{
-		# all c
-	}
-
-
-
-	public function myCourses()
-	{
-		# all c
-	}
-	public function courseView()
-	{
-		# all c
-	}
-	public function register()
-	{
-		# all c
-	}
-	public function leave()
-	{
-		# all c
-	}
 }

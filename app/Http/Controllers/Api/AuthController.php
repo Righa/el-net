@@ -12,6 +12,12 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    /**
+     * Authenticate user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function login(Request $request)
     {
     	$creds = $request->only(['email','password']);
@@ -29,6 +35,13 @@ class AuthController extends Controller
     	]);
     }
 
+    /**
+     * Register user.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response or
+     * @return \Illuminate\Http\Api\AuthController@login
+     */
     public function register(Request $request)
     {
     	$encryptedPass = Hash::make($request->password);
@@ -50,6 +63,12 @@ class AuthController extends Controller
     	}
     }
 
+    /**
+     * Deauthenticate user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function logout(Request $request)
     {
     	try {

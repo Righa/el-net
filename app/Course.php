@@ -12,6 +12,24 @@ use App\RegisteredCourse;
 
 class Course extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'subject_id', 'teacher_id', 'name', 'description'
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password'
+    ];
+
     public function subject()
     {
     	return $this->belongsTo(Subject::class);
@@ -24,11 +42,11 @@ class Course extends Model
     {
     	return $this->hasMany(Material::class);
     }
-    public function exam()
+    public function exams()
     {
         return $this->hasMany(Exam::class);
     }
-    public function registered_course()
+    public function registered_courses()
     {
         return $this->hasMany(RegisteredCourse::class);
     }

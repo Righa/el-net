@@ -12,7 +12,7 @@ class Forum extends Model
     {
     	return $this->belongsTo(User::class);
     }
-    public function forum_answer()
+    public function forum_answers()
     {
     	return $this->hasMany(ForumAnswer::class);
     }

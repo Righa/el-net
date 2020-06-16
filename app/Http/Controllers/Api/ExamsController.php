@@ -22,19 +22,6 @@ class ExamsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-		return response()->json([
-            'success' => true,
-            'message' => 'create exam'
-        ]);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -68,19 +55,9 @@ class ExamsController extends Controller
     public function show($id)
     {
         $exam = Exam::find($id);
+        $questions = $exam->exam_questions;
 
         return response()->json($exam);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -92,20 +69,19 @@ class ExamsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $exam = Exam::find($id);
-        $exam->course_id = $request->course_id;
-        $exam->name = $request->name;
-        $exam->takes_allowed = $request->takes_allowed;
-        $exam->duration = $request->duration;
-        $exam->password = $request->password;
-        $exam->open = $request->open;
-        $exam->close = $request->close;
-
-        $exam->save();
+        $affected = DB::table('exams')->where('id', $id)->update([
+            'course_id' => $request->course_id,
+            'name' => $request->name,
+            'takes_allowed' => $request->takes_allowed,
+            'duration' => $request->duration,
+            'password' => $request->password,
+            'open' => $request->open,
+            'close' => $request->close
+        ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'exam was updated'
+            'message' => $affected.' exam was updated'
         ]);
     }
 
@@ -124,30 +100,4 @@ class ExamsController extends Controller
             'message' => 'exam was deleted'
         ]);
     }
-
-
-
-
-
-
-
-
-
-
-	public function examsView()
-	{
-		# all c
-	}
-	public function attempt()
-	{
-		# all c
-	}
-	public function submit()
-	{
-		# all c
-	}
-	public function review()
-	{
-		# all c
-	}
 }

@@ -8,11 +8,20 @@ use App\Course;
 
 class Subject extends Model
 {
-    public function course()
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'description'
+    ];
+
+    public function courses()
     {
     	return $this->hasMany(Course::class);
     }
-    public function forum()
+    public function forums()
     {
     	return $this->hasMany(Forum::class);
     }

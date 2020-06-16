@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Forum;
-use App\ForumAnswer;
 use DB;
 
 class ForumsController extends Controller
@@ -23,19 +22,6 @@ class ForumsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-		return response()->json([
-            'success' => true,
-            'message' => 'open forum'
-        ]);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -48,7 +34,6 @@ class ForumsController extends Controller
         $forum->student_id = $request->student_id;
         $forum->subject_id = $request->subject_id;
         $forum->question = $request->question;
-        $forum->votes = $request->votes;
 
         $forum->save();
 
@@ -67,23 +52,9 @@ class ForumsController extends Controller
     public function show($id)
     {
         $forum = Forum::find($id);
-        $answers = ForumAnswer::all();
+        $answers = $forum->forum_answers;
 
-        return response()->json([
-            'forum' => $forum,
-            'answers' => $answers
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return response()->json($forum);
     }
 
     /**
@@ -95,18 +66,15 @@ class ForumsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $forum = Forum::find($id);
-
-        $forum->student_id = $request->student_id;
-        $forum->subject_id = $request->subject_id;
-        $forum->question = $request->question;
-        $forum->votes = $request->votes;
-
-        $forum->save();
+        $affected = DB::table('forums')->where('id', $id)->update([
+            'student_id' => $request->student_id, 
+            'subject_id' => $request->subject_id, 
+            'question' => $request->question
+        ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'forum was updated'
+            'message' => $affected.' forum was updated'
         ]);
     }
 
@@ -125,44 +93,4 @@ class ForumsController extends Controller
             'message' => 'forum was deleted'
         ]);
     }
-
-
-
-
-
-
-
-	public function close()
-	{
-		# all c
-	}
-
-
-    /**
-     * Add forum answer. might need a separate controller for functions in this section
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-
-	public function answer(Request $request, $id)
-	{
-        $answer = new ForumAnswer;
-
-        $answer->user_id = $request->user_id;
-        $answer->forum_id = $id;
-        $answer->answer = $request->answer;
-
-        $answer->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'forum was answered'
-        ]);
-	}
-	public function vote()
-	{
-		# all c
-	}
 }

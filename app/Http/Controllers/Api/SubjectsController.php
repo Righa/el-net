@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Subject;
-use App\Course;
 use DB;
 
 class SubjectsController extends Controller
@@ -20,19 +19,6 @@ class SubjectsController extends Controller
         $subjects = Subject::all();
 
         return response()->json($subjects);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-		return response()->json([
-            'success' => true,
-            'message' => 'create subject'
-        ]);
     }
 
     /**
@@ -65,23 +51,9 @@ class SubjectsController extends Controller
     public function show($id)
     {
         $subject = Subject::find($id);
-        $courses = Course::all();
+        $courses = $subject->courses;
 
-        return response()->json([
-            'subject' => $subject,
-            'courses' => $courses
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return response()->json($subject);
     }
 
     /**
@@ -93,16 +65,14 @@ class SubjectsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $subject = Subject::find($id);
-
-        $subject->name = $request->name;
-        $subject->description = $request->description;
-
-        $subject->save();
+        $affected = DB::table('subjects')->where('id', $id)->update([
+            'name' => $request->name, 
+            'description' => $request->description
+        ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'subject was updated'
+            'message' => $affected.' subject was updated'
         ]);
     }
 
