@@ -8,18 +8,17 @@ use App\Subject;
 use App\Material;
 use App\Exam;
 use App\RegisteredCourse;
+use App\Topic;
 
 
 class Course extends Model
 {
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are not mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'subject_id', 'teacher_id', 'name', 'description'
-    ];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -30,23 +29,67 @@ class Course extends Model
         'password'
     ];
 
+    /**
+     * Relationship.
+     *
+     * @return one subject
+     */
     public function subject()
     {
     	return $this->belongsTo(Subject::class);
     }
-    public function user()
+
+
+    /**
+     * Relationship.
+     *
+     * @return course teacher
+     */
+    public function teacher()
     {
     	return $this->belongsTo(User::class);
     }
+
+
+    /**
+     * Relationship.
+     *
+     * @return notes, media interactives and links
+     */
     public function material()
     {
     	return $this->hasMany(Material::class);
     }
-    public function exams()
+
+
+    /**
+     * Relationship.
+     *
+     * @return all exams and assignments from this course
+     */
+    public function activities()
     {
         return $this->hasMany(Exam::class);
     }
-    public function registered_courses()
+
+
+    /**
+     * Relationship.
+     *
+     * @return all topics in this course
+     */
+    public function topics()
+    {
+        return $this->hasMany(Topic::class);
+    }
+
+
+    /**
+     * Relationship.
+     *
+     * @return all students enrolled in this course
+     */
+    public function students()
     {
         return $this->hasMany(RegisteredCourse::class);
     }

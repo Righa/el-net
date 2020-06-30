@@ -16,11 +16,14 @@ class CreateMaterialsTable extends Migration
         Schema::create('materials', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('course_id');
-            $table->integer('topic');
+            $table->unsignedBigInteger('topic_id');
+            $table->string('name');
+            $table->string('type');
             $table->string('source');
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
+            $table->foreign('topic_id')->references('id')->on('topics')->onDelete('cascade');
         });
     }
 

@@ -18,11 +18,12 @@ class CreateExamQuestionsTable extends Migration
             $table->unsignedBigInteger('exam_id');
             $table->integer('number');
             $table->string('question');
-            $table->integer('attachment')->default(null);
+            $table->string('attachment')->nullable();
             $table->string('choice1');
             $table->string('choice2');
             $table->string('choice3');
             $table->string('choice4');
+            $table->integer('marks');
             $table->string('correct');
             $table->timestamps();
 

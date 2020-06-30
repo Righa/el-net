@@ -8,13 +8,11 @@ use App\Exam;
 class ExamQuestion extends Model
 {
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are not mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'exam_id', 'number', 'question', 'choice1', 'choice2', 'choice3', 'choice4'
-    ];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -26,6 +24,11 @@ class ExamQuestion extends Model
     ];
 
 
+    /**
+     * Relationship.
+     *
+     * @return exam
+     */
     public function exam()
     {
     	return $this->belongsTo(Exams::class);

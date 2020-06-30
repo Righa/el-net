@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/**
- * Route::middleware('auth:api')->get('/user', function (Request $request) {
- *    return $request->user();
- * });
- */
+/*
+ Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+ });
+*/
 
 # auth routes
 
@@ -35,12 +35,20 @@ Route::group(['middleware' => 'jwtAuth'], function() {
 		'courses' => 'Api\CoursesController',
 		'exams' => 'Api\ExamsController',
 		'forums' => 'Api\ForumsController',
-		'subjects' => 'Api\SubjectsController'
+		'subjects' => 'Api\SubjectsController',
+		'enrollment' => 'Api\EnrollmentController',
+		'reviews' => 'Api\ExamAnswerController',
+		'contributions' => 'Api\ForumAnswersController',
+		'material' => 'Api\MaterialController',
+		'questions' => 'Api\QuestionsController',
+		'takes' => 'Api\TakesController',
+		'topics' => 'Api\TopicsController',
+		'votes' => 'Api\VotesController',
 	]);
 });
 
 /**
- * All Routes in this group
+ * All Routes grouped
  *
 |
 |

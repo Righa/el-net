@@ -10,13 +10,11 @@ use App\Take;
 class Exam extends Model
 {
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are not mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'course_id', 'name', 'takes_allowed', 'duration', 'open', 'close'
-    ];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -27,14 +25,36 @@ class Exam extends Model
         'password'
     ];
 
+
+    /**
+     * Relationship.
+     *
+     * @return related course
+     */
     public function course()
     {
     	return $this->belongsTo(Course::class);
     }
+
+
+    /**
+     * Relationship.
+     *
+     * @return all questions in this exam
+     */
     public function exam_questions()
     {
     	return $this->hasMany(ExamQuestion::class);
     }
+
+
+    /**
+     * Relationship.
+     *
+     * @todo inner join with user->takes if needed
+     *
+     * @return all attempts in this exam
+     */
     public function takes()
     {
     	return $this->hasMany(Take::class);

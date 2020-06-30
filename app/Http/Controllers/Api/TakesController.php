@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Take;
+use DB;
 
-class ForumsController extends Controller
+class TakesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,17 +16,9 @@ class ForumsController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $takes = Take::all();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json($takes);
     }
 
     /**
@@ -34,7 +29,12 @@ class ForumsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Take::create($request);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Exam submitted successfully'
+        ]);
     }
 
     /**
@@ -45,18 +45,10 @@ class ForumsController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        $take = Take::find($id);
+        $answers = $take->answers;
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return response()->json($take);
     }
 
     /**
@@ -79,6 +71,11 @@ class ForumsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('takes')->where('id', $id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'The item was deleted successfully'
+        ]);
     }
 }

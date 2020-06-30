@@ -9,6 +9,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Take;
 use App\Course;
 use App\Forum;
+use App\Vote;
 use App\ForumAnswer;
 use App\RegisteredCourse;
 
@@ -22,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'role'
     ];
 
     /**
@@ -53,25 +54,76 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+
+    /**
+     * Relationship.
+     *
+     * @todo inner join with course->takes if needed
+     *
+     * @return all exam attempts
+     */
     public function takes()
     {
         return $this->hasMany(Take::class);
     }
+
+
+    /**
+     * Relationship.
+     *
+     * @return all courses taught by this user
+     */
     public function courses()
     {
         return $this->hasMany(Course::class);
     }
+
+
+    /**
+     * Relationship.
+     *
+     * @todo make controller function for tracking my forums
+     *
+     * @return all forums started by this user
+     */
     public function forums()
     {
         return $this->hasMany(Forum::class);
     }
+
+
+    /**
+     * Relationship.
+     *
+     * @todo may be to track answers if needed
+     * 
+     * @return all answers
+     */
     public function forum_answers()
     {
         return $this->hasMany(ForumAnswer::class);
     }
+
+
+    /**
+     * Relationship.
+     *
+     * @return courses this user is enrolled in
+     */
     public function registered_courses()
     {
         return $this->hasMany(RegisteredCourse::class);
+    }
+
+
+    /**
+     * Relationship.
+     *
+     * @return forum votes by this user
+     */
+    public function forum_votes()
+    {
+        return $this->hasMany(Vote::class);
     }
 
 }
