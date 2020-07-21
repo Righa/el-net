@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Take;
+use App\Exam;
+use App\ExamAnswer;
 use DB;
 
 class TakesController extends Controller
@@ -18,7 +20,10 @@ class TakesController extends Controller
     {
         $takes = Take::all();
 
-        return response()->json($takes);
+        return response()->json([
+            'success' => true,
+            'courses' => $takes
+        ]);
     }
 
     /**
@@ -29,7 +34,12 @@ class TakesController extends Controller
      */
     public function store(Request $request)
     {
-        Take::create($request);
+        $take = new Take;
+
+        $take->user_id = $request->user_id;
+        $take->exam_id = $request->exam_id;
+
+        $take->save();
 
         return response()->json([
             'success' => true,
@@ -48,7 +58,10 @@ class TakesController extends Controller
         $take = Take::find($id);
         $answers = $take->answers;
 
-        return response()->json($take);
+        return response()->json([
+            'success' => true,
+            'courses' => $take
+        ]);
     }
 
     /**

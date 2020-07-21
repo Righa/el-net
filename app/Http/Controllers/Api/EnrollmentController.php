@@ -5,6 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use App\RegisteredCourse;
+use App\Course;
+use App\User;
+use DB;
+
 class EnrollmentController extends Controller
 {
     /**
@@ -25,7 +32,46 @@ class EnrollmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'pasword' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'success' => false, 
+                'errors'=> $validator->errors()
+            ]);
+        }
+
+        $enrollment = new RegisteredCourse;
+
+        try {
+
+            $course = Course::find($request->course_id);
+
+            if ($request->password != $course->password) {
+                return response([
+                    'success' => false, 
+                    'errors'=> 'The password is incorrect.'
+                ]);
+            }
+
+            $enrollment->user_id = Auth::id();
+            $enrollment->course_id = $request->course_id;
+
+            $enrollment->save();
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => true,
+                'message' => $e
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'student enrolled successfully'
+        ]);
     }
 
     /**
@@ -36,7 +82,18 @@ class EnrollmentController extends Controller
      */
     public function show($id)
     {
-        //
+        $course = Course::find($id);
+
+        $count = $course->students->count();
+
+        for ($i=0; $i < $count; $i++) { 
+            $enrollment[$i] = User::find($course->students[$i]->user_id);
+        }
+
+        return response()->json([
+            'success' => true,
+            'students' => $enrollment
+        ]);
     }
 
     /**
@@ -59,6 +116,20 @@ class EnrollmentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+
+            RegisteredCourse::find($id)->delete();
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => true,
+                'message' => $e
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Student was unenrolled successfully'
+        ]);
     }
 }

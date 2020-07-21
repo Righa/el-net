@@ -29,7 +29,9 @@ Route::get('logout', 'Api\AuthController@logout');
 
 # other routes
 
-Route::group(['middleware' => 'jwtAuth'], function() {
+//Route::group(['middleware' => 'jwtAuth'], function() {
+
+	Route::post('profile', 'Api\AuthController@profile');
 
 	Route::apiResources([
 		'courses' => 'Api\CoursesController',
@@ -45,7 +47,7 @@ Route::group(['middleware' => 'jwtAuth'], function() {
 		'topics' => 'Api\TopicsController',
 		'votes' => 'Api\VotesController',
 	]);
-});
+//});
 
 /**
  * All Routes grouped

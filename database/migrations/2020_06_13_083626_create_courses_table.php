@@ -19,6 +19,7 @@ class CreateCoursesTable extends Migration
             $table->unsignedBigInteger('teacher_id');
             $table->string('name');
             $table->string('description');
+            $table->string('avatar_url')->nullable();
             $table->string('password');
             $table->timestamps();
 

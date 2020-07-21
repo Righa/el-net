@@ -4,7 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use App\Course;
+use App\User;
+use Exception;
 use DB;
 
 class CoursesController extends Controller
@@ -17,7 +22,15 @@ class CoursesController extends Controller
     public function index()
     {
         $courses = Course::all();
-        return response()->json($courses);
+
+        foreach ($courses as $course) {
+            $course->teacher;
+        }
+
+        return response()->json([
+            'success' => true,
+            'courses' => $courses
+        ]);
     }
 
     /**
@@ -28,14 +41,45 @@ class CoursesController extends Controller
      */
     public function store(Request $request)
     {
-        $course = new Course;
-        $course->subject_id = $request->subject_id;
-        $course->teacher_id = $request->teacher_id;
-        $course->name = $request->name;
-        $course->description = $request->description;
-        $course->password = $request->password;
+        $validator = Validator::make($request->all(), [
+            'subject_id' => 'required',
+            'teacher_id' => 'required',
+            'name' => 'required|unique:courses',
+            'description' => 'required',
+            'password' => 'required|min:5',
+        ]);
 
-        $course->save();
+        if ($validator->fails()) {
+            return response([
+                'success' => false, 
+                'message' => 'input errors encountered',
+                'errors'=> $validator->errors()
+            ]);
+        }
+
+        try {
+
+            $course = new Course;
+
+            if ($request->hasfile('avatar')) {
+                $path = $r->avatar->store('public/course_avatars');
+                $course->avatar_url = $path;
+            }
+
+            $course->subject_id = $request->subject_id;
+            $course->teacher_id = $request->teacher_id;
+            $course->name = $request->name;
+            $course->description = $request->description;
+            $course->password = $request->password;
+
+            $course->save();
+            
+        } catch (Exception $e) {
+            return response([
+                'success' => false, 
+                'errors'=> $e
+            ]);
+        }
 
         return response()->json([
             'success' => true,
@@ -52,9 +96,13 @@ class CoursesController extends Controller
     public function show($id)
     {
         $course = Course::find($id);
-        $material = $course->material;
+        $course->teacher;
+        $course->material;
 
-        return response()->json($course);
+        return response()->json([
+            'success' => true,
+            'courses' => $course
+        ]);
     }
 
     /**
@@ -66,17 +114,47 @@ class CoursesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $affected = DB::table('courses')->where('id', $id)->update([
-            'subject_id' => $request->subject_id,
-            'teacher_id' => $request->teacher_id,
-            'name' => $request->name,
-            'description' => $request->description,
-            'password' => $request->password
+        $validator = Validator::make($request->all(), [
+            'name' => 'min:5|unique:courses',
+            'description' => 'min:5',
+            'password' => 'min:5',
         ]);
+
+        if ($validator->fails()) {
+            return response([
+                'success' => false, 
+                'errors'=> $validator->errors()
+            ]);
+        }
+
+        $course = Course::find($id);
+
+        $changes = 4;
+
+        try {
+
+            if ($request->hasfile('avatar')) {
+                Storage::delete($course->avatar_url);
+                $path = $r->avatar->store('public/course_avatars');
+                $course->avatar_url = $path;
+            } else {
+                $changes--;
+            }
+            
+            ($request->name) ? $course->name = $request->name : $changes--;
+            ($request->description) ? $course->description = $request->description : $changes--;
+            ($request->password) ? $course->password = $request->password : $changes--;
+
+        } catch (Exception $e) {
+            return response([
+                'success' => false, 
+                'errors'=> $e
+            ]);
+        }
 
         return response()->json([
             'success' => true,
-            'message' => $affected.' course has been updated'
+            'message' => $changes.' changes have been saved'
         ]);
     }
 
@@ -88,7 +166,13 @@ class CoursesController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('courses')->where('id',$id)->delete();
+        $course = Course::find($id);
+
+        foreach ($course->material as $material) {
+            Storage::delete($material->source);
+        }
+
+        $course->delete();
 
         return response()->json([
             'success' => true,

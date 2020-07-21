@@ -18,7 +18,10 @@ class ForumsController extends Controller
     {
         $forums = Forum::all();
 
-        return response()->json($forums);
+        return response()->json([
+            'success' => true,
+            'courses' => $forums
+        ]);
     }
 
     /**
@@ -54,7 +57,10 @@ class ForumsController extends Controller
         $forum = Forum::find($id);
         $answers = $forum->forum_answers;
 
-        return response()->json($forum);
+        return response()->json([
+            'success' => true,
+            'courses' => $forum
+        ]);
     }
 
     /**

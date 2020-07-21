@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Validator;
+use App\ExamQuestion;
 use App\Exam;
 use DB;
 
@@ -16,9 +19,7 @@ class ExamsController extends Controller
      */
     public function index()
     {
-        $exams = Exam::all();
-
-        return response()->json($exams);
+        //
     }
 
     /**
@@ -29,20 +30,45 @@ class ExamsController extends Controller
      */
     public function store(Request $request)
     {
-        $exam = new Exam;
-        $exam->course_id = $request->course_id;
-        $exam->name = $request->name;
-        $exam->takes_allowed = $request->takes_allowed;
-        $exam->duration = $request->duration;
-        $exam->password = $request->password;
-        $exam->open = $request->open;
-        $exam->close = $request->close;
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:5',
+            'takes_allowed' => 'required',
+            'duration' => 'required',
+            'open' => 'required|date',
+            'close' => 'required|date',
+            'pasword' => 'required',
+        ]);
 
-        $exam->save();
+        if ($validator->fails()) {
+            return response([
+                'success' => false, 
+                'errors'=> $validator->errors()
+            ]);
+        }
+
+        try {
+
+            $exam = new Exam;
+            $exam->course_id = $request->course_id;
+            $exam->name = $request->name;
+            $exam->takes_allowed = $request->takes_allowed;
+            $exam->duration = $request->duration;
+            $exam->password = $request->password;
+            $exam->open = $request->open;
+            $exam->close = $request->close;
+
+            $exam->save();
+            
+        } catch (Exception $e) {
+            return response([
+                'success' => false, 
+                'errors'=> $e
+            ]);            
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'exam was created'
+            'message' => 'exam has been created'
         ]);
     }
 
@@ -55,9 +81,12 @@ class ExamsController extends Controller
     public function show($id)
     {
         $exam = Exam::find($id);
-        $questions = $exam->exam_questions;
+        $exam->exam_questions;
 
-        return response()->json($exam);
+        return response()->json([
+            'success' => true,
+            'exam' => $exam
+        ]);
     }
 
     /**
@@ -79,9 +108,51 @@ class ExamsController extends Controller
             'close' => $request->close
         ]);
 
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'min:5',
+            'takes_allowed' => 'integer',
+            'duration' => 'integer',
+            'password' => 'min:5',
+            'open' => 'date',
+            'close' => 'date',
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'success' => false, 
+                'errors'=> $validator->errors()
+            ]);
+        }
+
+        $course = Course::find($id);
+
+        $changes = 4;
+
+        try {
+
+            if ($request->hasfile('avatar')) {
+                Storage::delete($course->avatar_url);
+                $path = $r->avatar->store('public/course_avatars');
+                $course->avatar_url = $path;
+            } else {
+                $changes--;
+            }
+            
+            ($request->name) ? $course->name = $request->name : $changes--;
+            ($request->description) ? $course->description = $request->description : $changes--;
+            ($request->password) ? $course->password = $request->password : $changes--;
+
+        } catch (Exception $e) {
+            return response([
+                'success' => false, 
+                'errors'=> $e
+            ]);
+        }
+
         return response()->json([
             'success' => true,
-            'message' => $affected.' exam was updated'
+            'message' => $changes.' changes have been saved'
         ]);
     }
 
