@@ -23,7 +23,18 @@ class Forum extends Model
      */
     public function user()
     {
-    	return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
+    }
+
+
+    /**
+     * Relationship.
+     *
+     * @return forum subject
+     */
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
     }
 
 

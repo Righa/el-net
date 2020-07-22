@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Validator;
+use App\ForumAnswer;
+
 class ForumAnswersController extends Controller
 {
     /**
@@ -25,7 +28,40 @@ class ForumAnswersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'forum_answer' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'input errors',
+                'errors' => $validator->errors()
+            ]);
+        }
+
+        try {
+
+            $answer = new ForumAnswer;
+
+            $answer->forum_id = $request->forum_id;
+            $answer->user_id = $request->user_id;
+            $answer->answer = $request->forum_answer;
+
+            $answer->save();
+            
+        } catch (Exception $e) {
+            return response([
+                'success' => false,
+                'message' => 'internal errors',
+                'errors' => $e
+            ]);
+        }
+        return response([
+            'success' => true,
+            'message' => 'Your answer to this forum has been submitted'
+        ]);
+        
     }
 
     /**

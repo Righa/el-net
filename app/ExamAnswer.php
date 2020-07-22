@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Take;
+use App\ExamQuestion;
 
 class ExamAnswer extends Model
 {
@@ -23,5 +24,16 @@ class ExamAnswer extends Model
     public function take()
     {
         return $this->belongsTo(Take::class);
+    }
+
+
+    /**
+     * Relationship.
+     *
+     * @return parent take
+     */
+    public function question()
+    {
+        return $this->belongsTo(ExamQuestion::class);
     }
 }

@@ -18,12 +18,7 @@ class TakesController extends Controller
      */
     public function index()
     {
-        $takes = Take::all();
-
-        return response()->json([
-            'success' => true,
-            'courses' => $takes
-        ]);
+        //
     }
 
     /**
@@ -56,11 +51,14 @@ class TakesController extends Controller
     public function show($id)
     {
         $take = Take::find($id);
-        $answers = $take->answers;
+        $exam = $take->exam;
+        $take->answers;
+
+        $questions = $exam->exam_questions;
 
         return response()->json([
             'success' => true,
-            'courses' => $take
+            'take' => $take
         ]);
     }
 

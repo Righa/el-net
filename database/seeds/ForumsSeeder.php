@@ -14,7 +14,7 @@ class ForumsSeeder extends Seeder
     	for ($i=0; $i < 5; $i++) { 
 
         DB::table('forums')->insert([
-            'student_id' => '1',
+            'user_id' => '1',
             'subject_id' => '1',
             'question' => 'A good forum question by the forum seeder',
         ]);
@@ -23,12 +23,11 @@ class ForumsSeeder extends Seeder
             'user_id' => $i + 1,
             'forum_id' => '1',
             'answer' => 'A good answer by the forum seeder',
-            'votes' => '5',
         ]);
 
         DB::table('votes')->insert([
             'user_id' => $i + 1,
-            'answer_id' => '1',
+            'forum_answer_id' => '1',
         ]);
         
     	}

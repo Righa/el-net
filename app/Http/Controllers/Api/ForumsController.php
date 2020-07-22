@@ -18,9 +18,14 @@ class ForumsController extends Controller
     {
         $forums = Forum::all();
 
+        foreach ($forums as $forum) {
+            $user = $forum->user;
+            $forum->subject;
+        }
+
         return response()->json([
             'success' => true,
-            'courses' => $forums
+            'forums' => $forums
         ]);
     }
 
@@ -32,13 +37,35 @@ class ForumsController extends Controller
      */
     public function store(Request $request)
     {
-        $forum = new Forum;
+        $validator = Validator::make($request->all(), [
+            'question' => 'required|min:11'
+        ]);
 
-        $forum->student_id = $request->student_id;
-        $forum->subject_id = $request->subject_id;
-        $forum->question = $request->question;
+        if ($validator->fails()) {
+            return response([
+                'success' => false,
+                'message' => 'input errors',
+                'errors' => $validator->errors()
+            ]);
+        }
+        
+        try {
 
-        $forum->save();
+            $forum = new Forum;
+
+            $forum->student_id = $request->student_id;
+            $forum->subject_id = $request->subject_id;
+            $forum->question = $request->question;
+
+            $forum->save();
+            
+        } catch (Exception $e) {
+            return response([
+                'success' => false,
+                'message' => 'internal errors',
+                'errors' => $e
+            ]);
+        }
 
         return response()->json([
             'success' => true,
@@ -57,9 +84,13 @@ class ForumsController extends Controller
         $forum = Forum::find($id);
         $answers = $forum->forum_answers;
 
+        foreach ($answers as $answer) {
+            $answer->votes;
+        }
+
         return response()->json([
             'success' => true,
-            'courses' => $forum
+            'forum' => $forum
         ]);
     }
 
@@ -72,15 +103,38 @@ class ForumsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $affected = DB::table('forums')->where('id', $id)->update([
-            'student_id' => $request->student_id, 
-            'subject_id' => $request->subject_id, 
-            'question' => $request->question
+        $validator = Validator::make($request->all(), [
+            'question' => 'required|min:11'
         ]);
+
+        if ($validator->fails()) {
+            return response([
+                'success' => false,
+                'message' => 'input errors',
+                'errors' => $validator->errors()
+            ]);
+        }
+        
+        try {
+            
+            $forum = Forum::find($id);
+
+            $forum->question = $request->question;
+
+            $forum->save();
+
+        } catch (Exception $e) {
+            
+            return response([
+                'success' => false,
+                'message' => 'internal errors',
+                'errors' => $e
+            ]);
+        }
 
         return response()->json([
             'success' => true,
-            'message' => $affected.' forum was updated'
+            'message' => 'forum was updated'
         ]);
     }
 

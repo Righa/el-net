@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Exam;
+use App\ExamAnswer;
 
 class ExamQuestion extends Model
 {
@@ -31,6 +32,17 @@ class ExamQuestion extends Model
      */
     public function exam()
     {
-    	return $this->belongsTo(Exams::class);
+        return $this->belongsTo(Exams::class);
+    }
+
+
+    /**
+     * Relationship.
+     *
+     * @return answers
+     */
+    public function answers()
+    {
+        return $this->hasMany(ExamAnswer::class);
     }
 }

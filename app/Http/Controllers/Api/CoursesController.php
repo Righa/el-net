@@ -97,7 +97,11 @@ class CoursesController extends Controller
     {
         $course = Course::find($id);
         $course->teacher;
-        $course->material;
+        $topics = $course->topics;
+
+        foreach ($topics as $topic) {
+            $topic->material;
+        }
 
         return response()->json([
             'success' => true,
