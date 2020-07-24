@@ -1,10 +1,11 @@
 
 #API ROUTES
-
-<tr><td>POST</td><td>api/login</td><td></td></tr>
-<tr><td>POST</td><td>api/logout</td><td></td></tr>
-<tr><td>POST</td><td>api/register</td><td></td></tr>
-<tr><td>POST</td><td>api/profile</td><td></td></tr>
+<table>
+	<tr><td>POST</td><td>api/login</td><td></td></tr>
+	<tr><td>POST</td><td>api/logout</td><td></td></tr>
+	<tr><td>POST</td><td>api/register</td><td></td></tr>
+	<tr><td>POST</td><td>api/profile</td><td></td></tr>
+</table>
 
 ##apiResources items
 
@@ -22,12 +23,13 @@
 </ul>
 
 ##Routes in apiResources;
-
-<tr><td>GET</td><td>api/item</td><td>all</td></tr>
-<tr><td>GET</td><td>api/item/{id}</td><td>one</td></tr>
-<tr><td>POST</td><td>api/item</td><td>add</td></tr>
-<tr><td>PUT</td><td>api/item/{id}</td><td>edit</td></tr>
-<tr><td>DELETE</td><td>api/item/{id}</td><td>delete</td></tr>
+<table>
+	<tr><td>GET</td><td>api/item</td><td>all</td></tr>
+	<tr><td>GET</td><td>api/item/{id}</td><td>one</td></tr>
+	<tr><td>POST</td><td>api/item</td><td>add</td></tr>
+	<tr><td>PUT</td><td>api/item/{id}</td><td>edit</td></tr>
+	<tr><td>DELETE</td><td>api/item/{id}</td><td>delete</td></tr>
+</table>
 
 ##Not in use;
 
