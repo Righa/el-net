@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use App\Subject;
 use DB;
 
@@ -16,9 +19,23 @@ class SubjectsController extends Controller
      */
     public function index()
     {
-        $subjects = Subject::all();
+        try {
 
-        return response()->json($subjects);
+            $subjects = Subject::all();
+            
+        } catch (Exception $e) {
+            
+            return response([
+                'success' => false,
+                'message' => 'internal error',
+                'errors' => $e
+            ]);
+        }
+
+        return response([
+            'success' => true,
+            'subjects' => $subjects
+        ]);
     }
 
     /**
@@ -29,12 +46,37 @@ class SubjectsController extends Controller
      */
     public function store(Request $request)
     {
-        $subject = new Subject;
 
-        $subject->name = $request->name;
-        $subject->description = $request->description;
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:2|unique:subjects',
+            'description' => 'required|min:11',
+        ]);
 
-        $subject->save();
+        if ($validator->fails()) {
+            return response([
+                'success' => false, 
+                'message' => 'input errors encountered',
+                'errors'=> $validator->errors()
+            ]);
+        }
+
+        try {
+
+            $subject = new Subject;
+
+            $subject->name = $request->name;
+            $subject->description = $request->description;
+
+            $subject->save();
+            
+        } catch (Exception $e) {
+            
+            return response([
+                'success' => false,
+                'message' => 'internal error',
+                'errors' => $e
+            ]);
+        }
 
         return response()->json([
             'success' => true,
@@ -50,10 +92,25 @@ class SubjectsController extends Controller
      */
     public function show($id)
     {
-        $subject = Subject::find($id);
-        $courses = $subject->courses;
 
-        return response()->json($subject);
+        try {
+
+            $subject = Subject::find($id);
+            $subject->courses;
+            
+        } catch (Exception $e) {
+            
+            return response([
+                'success' => false,
+                'message' => 'internal error',
+                'errors' => $e
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'subject' => $subject
+        ]);
     }
 
     /**
@@ -65,14 +122,42 @@ class SubjectsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $affected = DB::table('subjects')->where('id', $id)->update([
-            'name' => $request->name, 
-            'description' => $request->description
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'min:2|unique:subjects',
+            'description' => 'min:11',
         ]);
 
-        return response()->json([
+        if ($validator->fails()) {
+            return response([
+                'success' => false, 
+                'message' => 'input errors encountered',
+                'errors'=> $validator->errors()
+            ]);
+        }
+
+        try {
+
+            $subject = Subject::find($id);
+
+            $changes = 2;
+            
+            ($request->name) ? $subject->name = $request->name : $changes--;
+            ($request->description) ? $subject->description = $request->description : $changes--;
+            
+        } catch (Exception $e) {
+            
+            return response([
+                'success' => false,
+                'message' => 'internal error',
+                'errors' => $e
+            ]);
+            
+        }
+
+        return response([
             'success' => true,
-            'message' => $affected.' subject was updated'
+            'message' => $changes.' changes have been saved'
         ]);
     }
 
@@ -84,11 +169,37 @@ class SubjectsController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('subjects')->where('id', $id)->delete();
+        try {
+            
+            $subject = Subject::find($id);
+
+            $courses = $subject->courses;
+
+            foreach ($courses as $course) {
+                Storage::delete($course->avatar_url);
+
+                $material = $course->material;
+
+                foreach ($material as $material) {
+                    Storage::delete($material->source);
+                }
+            }
+
+            $subject->delete();
+
+        } catch (Exception $e) {
+            
+            return response([
+                'success' => false,
+                'message' => 'internal error',
+                'errors' => $e
+            ]);
+            
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'subject was deleted'
+            'message' => 'subject and all its contents were deleted'
         ]);
     }
 }

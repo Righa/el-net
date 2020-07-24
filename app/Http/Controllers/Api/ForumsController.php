@@ -53,7 +53,7 @@ class ForumsController extends Controller
 
             $forum = new Forum;
 
-            $forum->student_id = $request->student_id;
+            $forum->student_id = Auth::id();
             $forum->subject_id = $request->subject_id;
             $forum->question = $request->question;
 

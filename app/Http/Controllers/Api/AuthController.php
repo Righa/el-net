@@ -42,10 +42,15 @@ class AuthController extends Controller
     			'message' => 'Email or password is invalid'
     		]);
     	}
+
+        $user = Auth::user();
+
+        $user->avatar_url = Storage::url($user->avatar_url);
+
     	return response()->json([
     		'success' => true,
     		'token' => $token,
-    		'user' => Auth::user()
+    		'user' => $user
     	]);
     }
 
@@ -124,8 +129,16 @@ class AuthController extends Controller
             $changes = 5;
 
             if ($request->hasfile('avatar')) {
+
+                Storage::delete($user->avatar_url);
                 $path = $r->avatar->store('public/user_avatars');
                 $user->avatar_url = $path;
+
+            } elseif ($request->drop_avatar) {
+
+                Storage::delete($user->avatar_url);
+                $user->avatar_url = null;
+
             } else {
                 $changes--;
             }
@@ -137,17 +150,20 @@ class AuthController extends Controller
 
             $user->save();
             
-            return response()->json([
-                'success' => true,
-                'message' => $changes.' changes have been saved'
-            ]);
-            
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => $e
             ]);
         }
+
+        $user->avatar_url = Storage::url($user->avatar_url);
+            
+        return response()->json([
+            'success' => true,
+            'message' => $changes.' changes have been saved',
+            'user' => $user
+        ]);
     }
 
     /**

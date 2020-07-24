@@ -28,6 +28,7 @@ class ForumsSeeder extends Seeder
         DB::table('votes')->insert([
             'user_id' => $i + 1,
             'forum_answer_id' => '1',
+            'value' => 1
         ]);
         
     	}

@@ -45,7 +45,7 @@ class ForumAnswersController extends Controller
             $answer = new ForumAnswer;
 
             $answer->forum_id = $request->forum_id;
-            $answer->user_id = $request->user_id;
+            $answer->user_id = Auth::id();
             $answer->answer = $request->forum_answer;
 
             $answer->save();

@@ -25,6 +25,7 @@ class CoursesController extends Controller
 
         foreach ($courses as $course) {
             $course->teacher;
+            $course->avatar_url = Storage::url($course->avatar_url);
         }
 
         return response()->json([
@@ -67,7 +68,7 @@ class CoursesController extends Controller
             }
 
             $course->subject_id = $request->subject_id;
-            $course->teacher_id = $request->teacher_id;
+            $course->teacher_id = Auth::id();
             $course->name = $request->name;
             $course->description = $request->description;
             $course->password = $request->password;
@@ -77,11 +78,12 @@ class CoursesController extends Controller
         } catch (Exception $e) {
             return response([
                 'success' => false, 
+                'message' => 'internal errors',
                 'errors'=> $e
             ]);
         }
 
-        return response()->json([
+        return response([
             'success' => true,
             'message' => 'Course has been created'
         ]);
@@ -97,13 +99,14 @@ class CoursesController extends Controller
     {
         $course = Course::find($id);
         $course->teacher;
+        $course->avatar_url = Storage::url($course->avatar_url);
         $topics = $course->topics;
 
         foreach ($topics as $topic) {
             $topic->material;
         }
 
-        return response()->json([
+        return response([
             'success' => true,
             'courses' => $course
         ]);
@@ -125,10 +128,12 @@ class CoursesController extends Controller
         ]);
 
         if ($validator->fails()) {
+
             return response([
                 'success' => false, 
                 'errors'=> $validator->errors()
             ]);
+
         }
 
         $course = Course::find($id);
@@ -139,7 +144,7 @@ class CoursesController extends Controller
 
             if ($request->hasfile('avatar')) {
                 Storage::delete($course->avatar_url);
-                $path = $r->avatar->store('public/course_avatars');
+                $path = $request->avatar->store('public/course_avatars');
                 $course->avatar_url = $path;
             } else {
                 $changes--;
@@ -152,11 +157,12 @@ class CoursesController extends Controller
         } catch (Exception $e) {
             return response([
                 'success' => false, 
+                'message' => 'internal errors',
                 'errors'=> $e
             ]);
         }
 
-        return response()->json([
+        return response([
             'success' => true,
             'message' => $changes.' changes have been saved'
         ]);
@@ -170,15 +176,27 @@ class CoursesController extends Controller
      */
     public function destroy($id)
     {
-        $course = Course::find($id);
+        try {
+            
+            $course = Course::find($id);
 
-        foreach ($course->material as $material) {
-            Storage::delete($material->source);
+            foreach ($course->material as $material) {
+                Storage::delete($material->source);
+            }
+
+            $course->delete();
+
+        } catch (Exception $e) {
+            
+            return response([
+                'success' => false, 
+                'message' => 'internal errors',
+                'errors'=> $e
+            ]);
+            
         }
 
-        $course->delete();
-
-        return response()->json([
+        return response([
             'success' => true,
             'message' => 'Course has been deleted'
         ]);

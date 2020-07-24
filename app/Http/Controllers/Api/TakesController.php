@@ -29,12 +29,34 @@ class TakesController extends Controller
      */
     public function store(Request $request)
     {
-        $take = new Take;
+        try {
 
-        $take->user_id = $request->user_id;
-        $take->exam_id = $request->exam_id;
+            $taken = DB::table('takes')->where(['user_id', Auth::id()],['exam_id', $request->exam_id])->count();
+            $exam = Exam::find($request->exam_id);
+            
+            if ($taken == $exam->takes_allowed) {
+                return response([
+                    'success' => false,
+                    'message' => 'No more takes allowed'
+                ]);
+            }
+            
+            $take = new Take;
 
-        $take->save();
+            $take->user_id = $request->user_id;
+            $take->exam_id = $request->exam_id;
+
+            $take->save();
+
+        } catch (Exception $e) {
+            
+            return response([
+                'success' => false,
+                'message' => 'Internal error',
+                'errors' => $e
+            ]);
+            
+        }
 
         return response()->json([
             'success' => true,
@@ -50,15 +72,34 @@ class TakesController extends Controller
      */
     public function show($id)
     {
-        $take = Take::find($id);
-        $exam = $take->exam;
-        $take->answers;
+        try {
 
-        $questions = $exam->exam_questions;
+            $take = Take::find($id);
+            $exam = $take->exam;
+            $answers = $take->answers;
+
+            $total = 0;
+
+            foreach ($answers as $answer) {
+                $total = $total + $answer->marks;
+            }
+
+            $questions = $exam->exam_questions;
+            
+        } catch (Exception $e) {
+            
+            return response([
+                'success' => false,
+                'message' => 'Internal error',
+                'errors' => $e
+            ]);
+            
+        }
 
         return response()->json([
             'success' => true,
-            'take' => $take
+            'take' => $take,
+            'marks' => $total
         ]);
     }
 
@@ -82,11 +123,25 @@ class TakesController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('takes')->where('id', $id)->delete();
+        try {
+
+            $take = Take::find($id);
+
+            $take->delete();
+            
+        } catch (Exception $e) {
+            
+            return response([
+                'success' => false,
+                'message' => 'Internal error',
+                'errors' => $e
+            ]);
+            
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'The item was deleted successfully'
+            'message' => 'The take was deleted successfully'
         ]);
     }
 }

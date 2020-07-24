@@ -30,7 +30,7 @@ class ExamAnswer extends Model
     /**
      * Relationship.
      *
-     * @return parent take
+     * @return question
      */
     public function question()
     {
