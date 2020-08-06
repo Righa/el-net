@@ -1,5 +1,6 @@
 
-#API ROUTES
+# API ROUTES
+
 <table>
 	<tr><td>POST</td><td>api/login</td><td></td></tr>
 	<tr><td>POST</td><td>api/logout</td><td></td></tr>
@@ -7,7 +8,7 @@
 	<tr><td>POST</td><td>api/profile</td><td></td></tr>
 </table>
 
-##apiResources items
+## apiResources items
 
 <ul>
 	<li>votes</li>
@@ -22,7 +23,7 @@
 	<li>contributions</li>
 </ul>
 
-##Routes in apiResources;
+## Routes in apiResources;
 <table>
 	<tr><td>GET</td><td>api/item</td><td>all</td></tr>
 	<tr><td>GET</td><td>api/item/{id}</td><td>one</td></tr>
@@ -31,7 +32,7 @@
 	<tr><td>DELETE</td><td>api/item/{id}</td><td>delete</td></tr>
 </table>
 
-##Not in use;
+## Not in use;
 
 <ul>
 	<li>all,edit, in enrollment</li>
@@ -43,7 +44,7 @@
 	<li>all,one,edit,delete, in votes</li>
 </ul>
 
-##Special
+## Special
 
 <ul>
 	<li>GET api/enrollment/id - takes course id</li>
