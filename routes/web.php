@@ -17,6 +17,29 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+//api demo
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/demo', 'Demo@index');
+
+Route::get('/login', 'User@signIn');
+Route::get('register', 'User@signUp');
+Route::get('profile', 'User@editProfile');
+
+Route::post('login', 'User@login');
+Route::post('register', 'User@register');
+Route::post('logout', 'User@logout');
+Route::post('profile', 'User@profile');
+
+Route::resources([
+	'exams' => 'ExamsController',
+	'forums' => 'ForumsController',
+	'courses' => 'CoursesController',
+	'enrollment' => 'EnrollmentController',
+	'exam_answers' => 'ExamAnswersController',
+	'forum_answers' => 'ForumAnswersController',
+	'materials' => 'MaterialsController',
+	'subjects' => 'SubjectsController',
+	'takes' => 'TakesController',
+	'topics' => 'TopicsController',
+	'votes' => 'VotesController',
+]);

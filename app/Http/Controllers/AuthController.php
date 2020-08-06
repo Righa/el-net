@@ -1,16 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\User;
-use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -34,24 +27,24 @@ class AuthController extends Controller
             ]);
         }
 
-    	$creds = $request->only(['email','password']);
+        $creds = $request->only(['email','password']);
 
-    	if (!$token = auth()->attempt($creds)) {
-    		return response()->json([
-    			'success' => false,
-    			'message' => 'Email or password is invalid'
-    		]);
-    	}
+        if (!$token = auth()->attempt($creds)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email or password is invalid'
+            ]);
+        }
 
         $user = Auth::user();
 
         $user->avatar_url = Storage::url($user->avatar_url);
 
-    	return response()->json([
-    		'success' => true,
-    		'token' => $token,
-    		'user' => $user
-    	]);
+        return response()->json([
+            'success' => true,
+            'token' => $token,
+            'user' => $user
+        ]);
     }
 
     /**
@@ -176,19 +169,19 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-    	try {
+        try {
 
-    		JWTAuth::invalidate(JWTAuth::parseToken($request->token));
-    		return response()->json([
-    			'success' => true,
-    			'message' => 'logout success'
-    		]);
-    		
-    	} catch (Exception $e) {
-    		return response()->json([
-    			'success' => false,
-    			'message' => $e
-    		]);
-    	}
+            JWTAuth::invalidate(JWTAuth::parseToken($request->token));
+            return response()->json([
+                'success' => true,
+                'message' => 'logout success'
+            ]);
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e
+            ]);
+        }
     }
 }
