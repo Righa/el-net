@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', 'Api\AuthController@login');
 Route::post('register', 'Api\AuthController@register');
+//Route::post('reauth', 'Api\AuthController@refresh');
 
 
 # authenticated group
@@ -33,6 +34,7 @@ Route::group(['middleware' => 'jwtAuth'], function() {
 
 	Route::post('profile', 'Api\AuthController@profile');
 	Route::get('logout', 'Api\AuthController@logout');
+	Route::get('check_auth', 'Api\AuthController@checkAuth');
 
 	# standard routes group
 

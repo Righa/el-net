@@ -15,36 +15,17 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'password' => 'required',
+        /*$response = Http::post('http://127.0.0.1:8000/api/login', [
+            'email' => $request->email,
+            'password' => $request->password
         ]);
 
-        if ($validator->fails()) {
-            return response([
-                'success' => false, 
-                'errors'=> $validator->errors()
-            ]);
-        }
+        $res = $response->json();
+        return view('demo')->with('res', $res);*/
 
-        $creds = $request->only(['email','password']);
+        //try session//
 
-        if (!$token = auth()->attempt($creds)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Email or password is invalid'
-            ]);
-        }
-
-        $user = Auth::user();
-
-        $user->avatar_url = Storage::url($user->avatar_url);
-
-        return response()->json([
-            'success' => true,
-            'token' => $token,
-            'user' => $user
-        ]);
+        //*keep*//: return redirect('demo');
     }
 
     /**

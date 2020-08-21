@@ -29,7 +29,8 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response([
-                'success' => false, 
+                'success' => false,
+                'message' => 'input errors',
                 'errors'=> $validator->errors()
             ]);
         }
@@ -120,6 +121,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response([
                 'success' => false, 
+                'message' => 'input errors',
                 'errors'=> $validator->errors()
             ]);
         }
@@ -169,6 +171,57 @@ class AuthController extends Controller
     }
 
     /**
+     * Refresh token.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function refresh(Request $request)
+    {
+        try {
+
+            $newToken = auth()->refresh(JWTAuth::parseToken($request->token));
+
+            // Pass true as the first param to force the token to be blacklisted "forever".
+            // The second parameter will reset the claims for the new token
+            $newToken = auth()->refresh(true, true);
+
+            $user = Auth::user();
+
+            $user->avatar_url = Storage::url($user->avatar_url);
+
+            return response()->json([
+                'success' => true,
+                'token' => $newToken,
+                'user' => $user
+            ]);
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e
+            ]);
+        }
+    }
+
+    /**
+     * Check if user is authenticated.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function checkAuth()
+    {
+        $user = Auth::user();
+
+        $user->avatar_url = Storage::url($user->avatar_url);
+
+        return response()->json([
+            'success' => true,
+            'user' => $user
+        ]);
+    }
+
+    /**
      * Deauthenticate user.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -176,19 +229,19 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-    	try {
+        try {
 
-    		JWTAuth::invalidate(JWTAuth::parseToken($request->token));
-    		return response()->json([
-    			'success' => true,
-    			'message' => 'logout success'
-    		]);
-    		
-    	} catch (Exception $e) {
-    		return response()->json([
-    			'success' => false,
-    			'message' => $e
-    		]);
-    	}
+            JWTAuth::invalidate(JWTAuth::parseToken($request->token));
+            return response()->json([
+                'success' => true,
+                'message' => 'logout success'
+            ]);
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e
+            ]);
+        }
     }
 }
