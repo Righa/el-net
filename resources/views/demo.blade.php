@@ -5,5 +5,7 @@
 </head>
 <body>
 {{ print_r($res) }}
+<br><br><br>
+{{ Illuminate\Foundation\Inspiring::quote() }}
 </body>
 </html>

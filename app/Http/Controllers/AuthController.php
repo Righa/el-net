@@ -8,6 +8,36 @@ use Illuminate\Support\Facades\Http;
 class AuthController extends Controller
 {
     /**
+     * login page
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function signIn()
+    {
+        return view('auth.login');
+    }
+
+    /**
+     * register page
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function signUp()
+    {
+        return view('auth.register');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editProfile()
+    {
+        return view('profile');
+    }
+
+    /**
      * Authenticate user.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -15,17 +45,40 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        /*$response = Http::post('http://127.0.0.1:8000/api/login', [
+        $response = Http::post('http://127.0.0.1:8000/api/login', [
             'email' => $request->email,
             'password' => $request->password
         ]);
 
         $res = $response->json();
-        return view('demo')->with('res', $res);*/
 
-        //try session//
+        if ($res['success']) {
 
-        //*keep*//: return redirect('demo');
+            $request->session()->flush();
+            
+            session(['miToken' => $res['token']]);
+            session(['user' => $res['user']]);
+
+            return redirect('demo');
+
+        } else {
+
+            if ($res['message'] == 'input errors') {
+
+                if (isset($res['errors']['email'][0])) {
+                    $request->session()->flash('email', $res['errors']['email'][0]);
+                }
+                if (isset($res['errors']['password'][0])) {
+                    $request->session()->flash('password', $res['errors']['password'][0]);
+                }
+                return $this->signIn();
+                
+            } else {
+                $request->session()->flash('message', $res['message']);
+                return $this->signIn();
+            }
+            
+        }
     }
 
     /**
@@ -33,45 +86,57 @@ class AuthController extends Controller
      * 
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response or
-     * @return \Illuminate\Http\Api\AuthController@login
      */
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'role' => 'required|min:2',
-            'first_name' => 'required|min:2',
-            'last_name' => 'required|min:2',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
+        $role = 'learner';
+        if ($request->teacher_check) {
+            $role = 'teacher';
+        }
+        
+        $response = Http::post('http://127.0.0.1:8000/api/register', [
+            'email' => $request->email,
+            'password' => $request->password,
+            'role' => $role,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'password_confirmation' => $request->password_confirmation
         ]);
 
-        if ($validator->fails()) {
-            return response([
-                'success' => false, 
-                'message'=> 'input errors',
-                'errors' => $validator->errors()
-            ]);
-        }
+        $res = $response->json();
 
+        if ($res['success']) {
 
-        $encryptedPass = Hash::make($request->password);
-
-        $user = new User;
-
-        try {
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->email = $request->email;
-            $user->password = $encryptedPass;
-            $user->role = $request->role;
-            $user->save();
-            return $this->login($request);
+            $request->session()->flush();
             
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e
-            ]);
+            session(['miToken' => $res['token']]);
+            session(['user' => $res['user']]);
+
+            return redirect('demo');
+
+        } else {
+
+            if ($res['message'] == 'input errors') {
+
+                if (isset($res['errors']['email'][0])) {
+                    $request->session()->flash('email', $res['errors']['email'][0]);
+                }
+                if (isset($res['errors']['password'][0])) {
+                    $request->session()->flash('password', $res['errors']['password'][0]);
+                }
+                if (isset($res['errors']['first_name'][0])) {
+                    $request->session()->flash('first_name', $res['errors']['email'][0]);
+                }
+                if (isset($res['errors']['last_name'][0])) {
+                    $request->session()->flash('last_name', $res['errors']['password'][0]);
+                }
+                return $this->signUp();
+                
+            } else {
+                $request->session()->flash('message', $res['message']);
+                return $this->signUp();
+            }
+            
         }
     }
 
@@ -150,19 +215,14 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        try {
+        $response = Http::withToken(session('miToken'))->get('http://127.0.0.1:8000/api/logout');
+        $res = $response->json();
+        
+        if ($res['success']) {
 
-            JWTAuth::invalidate(JWTAuth::parseToken($request->token));
-            return response()->json([
-                'success' => true,
-                'message' => 'logout success'
-            ]);
-            
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e
-            ]);
+            $request->session()->flush();
+
+            return redirect('/');
         }
     }
 }

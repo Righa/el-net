@@ -21,6 +21,12 @@
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+                                @if(Session::has('email'))
+                                <span class="text-danger">
+                                    {{ session('email')}}
+                                </span>
+                                @endif
                             </div>
                         </div>
 
@@ -29,6 +35,12 @@
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+
+                                @if(Session::has('password'))
+                                <span class="text-danger">
+                                    {{ session('password')}}
+                                </span>
+                                @endif
                             </div>
                         </div>
 

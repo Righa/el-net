@@ -48,14 +48,14 @@ Route::get('/preferences', function () {
 
 Route::get('demo', 'Demo@index');
 
-Route::get('login', 'AuthController@login');
-Route::get('register', 'User@signUp');
-Route::get('profile', 'User@editProfile');
+Route::get('login', 'AuthController@signIn');
+Route::get('register', 'AuthController@signUp');
+Route::get('profile', 'AuthController@editProfile');
 
-Route::post('login', 'User@login');
-Route::post('register', 'User@register');
-Route::post('logout', 'User@logout');
-Route::post('profile', 'User@profile');
+Route::post('login', 'AuthController@login');
+Route::post('register', 'AuthController@register');
+Route::get('logout', 'AuthController@logout');
+Route::post('profile', 'AuthController@profile');
 
 /*
 Route::resources([
