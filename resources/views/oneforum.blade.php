@@ -6,8 +6,8 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col">
-                    <strong>pic;~</strong><strong>Name;~</strong>
-                    <p>question........ ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ........... ............</p>  
+                    <strong>pic;~</strong><strong>{{ $data['forum']['user_id'] }};~</strong>
+                    <p>{{ $data['forum']['question'] }}</p>  
                 </div>
             </div>
             <div class="row">
@@ -15,21 +15,14 @@
                     <div class="badge badge-primary">subject</div>
                 </div>
             </div>
+
+            @foreach($data['forum']['forum_answers'] as $answer)
             <div class="card">
                 <div class="card-body">
-                    <strong>name: </strong>answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer
+                    <strong>{{ $answer['user_id'] }}: </strong>{{ $answer['answer'] }} <strong>{{ count($answer['votes']) }} votes</strong>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    answeranswer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer answer
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>

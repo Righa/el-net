@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class ForumsController extends Controller
 {
@@ -13,7 +14,9 @@ class ForumsController extends Controller
      */
     public function index()
     {
-        //
+        $response = Http::withToken(session('miToken'))->get('http://127.0.0.1:8000/api/forums');
+        $res = $response->json();
+        return view('forums')->with('data', $res);
     }
 
     /**
@@ -45,7 +48,9 @@ class ForumsController extends Controller
      */
     public function show($id)
     {
-        //
+        $response = Http::withToken(session('miToken'))->get('http://127.0.0.1:8000/api/forums/'.$id);
+        $res = $response->json();
+        return view('oneforum')->with('data', $res);
     }
 
     /**

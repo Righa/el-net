@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class CoursesController extends Controller
 {
@@ -13,7 +14,9 @@ class CoursesController extends Controller
      */
     public function index()
     {
-        return view('explore');
+        $response = Http::withToken(session('miToken'))->get('http://127.0.0.1:8000/api/courses');
+        $res = $response->json();
+        return view('explore')->with('data', $res);
     }
 
     /**
@@ -45,7 +48,9 @@ class CoursesController extends Controller
      */
     public function show($id)
     {
-        //
+        $response = Http::withToken(session('miToken'))->get('http://127.0.0.1:8000/api/courses/'.$id);
+        $res = $response->json();
+        return view('onecourse')->with('data', $res);
     }
 
     /**

@@ -16,33 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/courses', function () {
-    return view('courses');
-});
-Route::get('/explore', function () {
-    return view('explore');
-});
-Route::get('/assessment', function () {
-    return view('assessment');
-});
-Route::get('/exams', function () {
-    return view('exams');
-});
-Route::get('/forums', function () {
-    return view('forums');
-});
-Route::get('/onecourse', function () {
-    return view('onecourse');
-});
-Route::get('/oneexam', function () {
-    return view('oneexam');
-});
-Route::get('/oneforum', function () {
-    return view('oneforum');
-});
-Route::get('/preferences', function () {
-    return view('profile');
-});
 
 //api demo
 
@@ -57,7 +30,7 @@ Route::post('register', 'AuthController@register');
 Route::get('logout', 'AuthController@logout');
 Route::post('profile', 'AuthController@profile');
 
-/*
+
 Route::resources([
 	'exams' => 'ExamsController',
 	'forums' => 'ForumsController',
@@ -71,9 +44,13 @@ Route::resources([
 	'topics' => 'TopicsController',
 	'votes' => 'VotesController',
 ]);
-
+/*
 @todo 	user->upcoming exams
 		user->courses
-		user->
+		user->takes
+		user->takes
+		user->takes
+		user->takes
+		user->takes
 
 		*/

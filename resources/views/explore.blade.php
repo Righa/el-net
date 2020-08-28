@@ -6,47 +6,23 @@
         <div class="col-md-8">
             <div class="row"><div class="col"><h1>Discover courses;</h1></div></div>
 
-            <div class="card">
-                <div class="card-header">Course name</div>
+            @foreach($data['courses'] as $course)
+
+            <a href="courses/{{ $course['id'] }}" class="card">
+                <div class="card-header">{{ $course['name'] }}</div>
 
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-3"><strong>ikon | </strong></div>
 
                         <div class="col">
-                            desc desc desc desc desc desc desc desc desc desc desc desc desc desc desc desc 
+                            {{ $course['description'] }} 
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
 
-            <div class="card">
-                <div class="card-header">Course name</div>
-
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-3"><strong>ikon | </strong></div>
-
-                        <div class="col">
-                            desc desc desc desc desc desc desc desc desc desc desc desc desc desc desc desc 
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">Course name</div>
-
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-3"><strong>ikon | </strong></div>
-
-                        <div class="col">
-                            desc desc desc desc desc desc desc desc desc desc desc desc desc desc desc desc 
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>
