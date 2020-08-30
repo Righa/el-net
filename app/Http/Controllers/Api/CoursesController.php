@@ -24,7 +24,8 @@ class CoursesController extends Controller
         $courses = Course::all();
 
         foreach ($courses as $course) {
-            $course->teacher;
+            $course->user;
+            $course->user->avatar_url = Storage::url($course->user->avatar_url);
             $course->avatar_url = Storage::url($course->avatar_url);
         }
 
@@ -201,4 +202,11 @@ class CoursesController extends Controller
             'message' => 'Course has been deleted'
         ]);
     }
+
+
+
+
+
+
+    ///new logic here
 }

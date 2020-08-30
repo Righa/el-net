@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Http;
+
 class ExamsController extends Controller
 {
     /**
@@ -45,7 +47,9 @@ class ExamsController extends Controller
      */
     public function show($id)
     {
-        //
+        $response = Http::withToken(session('miToken'))->get('http://127.0.0.1:8000/api/exams/'.$id);
+        $res = $response->json();
+        return view('oneexam')->with('exam', $res['exam']);
     }
 
     /**

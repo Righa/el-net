@@ -59,7 +59,7 @@ class AuthController extends Controller
             session(['miToken' => $res['token']]);
             session(['user' => $res['user']]);
 
-            return redirect('demo');
+            return redirect('courses');
 
         } else {
 
@@ -112,7 +112,7 @@ class AuthController extends Controller
             session(['miToken' => $res['token']]);
             session(['user' => $res['user']]);
 
-            return redirect('demo');
+            return redirect('courses');
 
         } else {
 

@@ -45,7 +45,7 @@ class Course extends Model
      *
      * @return course teacher
      */
-    public function teacher()
+    public function user()
     {
     	return $this->belongsTo(User::class);
     }

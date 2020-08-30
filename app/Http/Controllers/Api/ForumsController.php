@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Forum;
 use DB;
 
@@ -86,6 +87,8 @@ class ForumsController extends Controller
 
         foreach ($answers as $answer) {
             $answer->votes;
+            $answer->user;
+            $answer->user->avatar_url = Storage::url($answer->user->avatar_url);
         }
 
         return response()->json([
@@ -153,4 +156,11 @@ class ForumsController extends Controller
             'message' => 'forum was deleted'
         ]);
     }
+
+
+
+
+
+
+    //new logic here
 }

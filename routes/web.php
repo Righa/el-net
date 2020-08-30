@@ -30,20 +30,24 @@ Route::post('register', 'AuthController@register');
 Route::get('logout', 'AuthController@logout');
 Route::post('profile', 'AuthController@profile');
 
+Route::group(['middleware' => 'miAuth'], function() {
 
-Route::resources([
-	'exams' => 'ExamsController',
-	'forums' => 'ForumsController',
-	'courses' => 'CoursesController',
-	'enrollment' => 'EnrollmentController',
-	'exam_answers' => 'ExamAnswersController',
-	'forum_answers' => 'ForumAnswersController',
-	'materials' => 'MaterialsController',
-	'subjects' => 'SubjectsController',
-	'takes' => 'TakesController',
-	'topics' => 'TopicsController',
-	'votes' => 'VotesController',
-]);
+	Route::resources([
+		'home' => 'HomeController',
+		'exams' => 'ExamsController',
+		'forums' => 'ForumsController',
+		'courses' => 'CoursesController',
+		'enrollment' => 'EnrollmentController',
+		'exam_answers' => 'ExamAnswersController',
+		'forum_answers' => 'ForumAnswersController',
+		'materials' => 'MaterialsController',
+		'subjects' => 'SubjectsController',
+		'takes' => 'TakesController',
+		'topics' => 'TopicsController',
+		'votes' => 'VotesController',
+	]);
+});
+
 /*
 @todo 	user->upcoming exams
 		user->courses

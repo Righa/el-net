@@ -15,7 +15,7 @@ class CoursesSeeder extends Seeder
     		
         DB::table('courses')->insert([
             'subject_id' => '1',
-            'teacher_id' => '1',
+            'user_id' => '1',
             'name' => 'Good course',
             'description' => 'Auto generated course by courses seeder',
             'password' => 'password',
