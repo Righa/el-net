@@ -28,9 +28,22 @@
                         </div>
 						<div class="col"><h2>NEW COURSE</h2></div>
 					</div>
+
+                            @if(Session::has('success'))
+
+                            <div class="alert alert-success">{{session('success')}} </div>
+
+                            @endif
+
+                            @if(Session::has('errors'))
+
+                            <div class="alert alert-danger">{{session('errors')}} </div>
+
+                            @endif
+
 				</div>
 				<div class="card-body">
-					<form method="post" action="{{url('courses')}} ">
+					<form method="post" action="{{url('courses')}} " enctype="multipart/form-data">
 						@csrf
 						<div class="form-group">
 							<label>Avatar:</label><br>
@@ -39,7 +52,7 @@
 						</div>
 						<div class="form-group">
 							<label>Subject</label>
-							<select type="text" name="correct" class="form-control">
+							<select type="text" name="subject_id" class="form-control custom-select">
 
 								@foreach($res['subjects'] as $subject)
 

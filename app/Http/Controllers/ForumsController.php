@@ -26,7 +26,7 @@ class ForumsController extends Controller
      */
     public function create()
     {
-        //
+        //invalid
     }
 
     /**
@@ -37,7 +37,22 @@ class ForumsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $response = Http::withToken(session('miToken'))->post('http://127.0.0.1:8000/api/forums', [
+            'subject_id' => $request->subject,
+            'question' => $request->question
+        ]);
+        $res = $response->json();
+
+        if ($res['success']) {
+
+            $request->session()->flash('success', $res['message']);
+            return redirect('forums/'.$res['forum']);
+
+        } else {
+
+            $request->session()->flash('errors', $res['message']);
+            return redirect('home');
+        }
     }
 
     /**

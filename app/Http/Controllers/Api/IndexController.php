@@ -19,6 +19,7 @@ class IndexController extends Controller
     public function index()
     {
     	$user = Auth::user();
+        $subjects = Subject::all();
         $courses = Course::all();
         $forums = Forum::all();
 
@@ -50,6 +51,7 @@ class IndexController extends Controller
         return response()->json([
             'success' => true,
             'courses' => $courses,
+            'subjects' => $subjects,
             'myCourses' => $myCourses,
             'forums' => $forums
         ]);

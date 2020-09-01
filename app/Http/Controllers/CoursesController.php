@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Http;
 
 class CoursesController extends Controller
@@ -39,7 +40,35 @@ class CoursesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        if ($request->hasFile('avatar')) {
+
+            $photo = fopen($request->avatar, 'r');
+            $response = Http::attach('avatar', $photo)->withToken(session('miToken'))->post('http://127.0.0.1:8000/api/courses', [
+                'name' => $request->name,
+                'subject_id' => $request->subject_id,
+                'description' => $request->description,
+                'password' => $request->password
+            ]);
+
+        } else {
+
+            $response = Http::withToken(session('miToken'))->post('http://127.0.0.1:8000/api/courses', [
+                'name' => $request->name,
+                'subject_id' => $request->subject_id,
+                'description' => $request->description,
+                'password' => $request->password
+            ]);
+        }
+        $res = $response->json();
+        
+        if ($res['success']) {
+            $request->session()->flash('success', $res['message']);
+            return redirect('home');
+        } else {
+            $request->session()->flash('errors', $res['message']);
+            return view('newcourse');
+        }
     }
 
     /**
@@ -86,6 +115,18 @@ class CoursesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $response = Http::withToken(session('miToken'))->delete('http://127.0.0.1:8000/api/courses/'.$id);
+
+        $res = $response->json();
+
+        if ($res['success']) {
+
+            session()->flash('success', $res['message']);
+            return redirect('home');
+
+        } else {
+            session()->flash('errors', $res['message']);
+            return redirect('courses/'.$id);
+        }
     }
 }

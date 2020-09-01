@@ -64,7 +64,7 @@
 						</div>
 						<div class="form-group">
 							<label>Correct answer</label>
-							<select type="text" name="correct" class="form-control">
+							<select type="text" name="correct" class="form-control custom-select">
 								<option value="choice1">Choice 1</option>
 								<option value="choice2">Choice 2</option>
 								<option value="choice3">Choice 3</option>

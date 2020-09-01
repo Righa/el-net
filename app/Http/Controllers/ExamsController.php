@@ -25,7 +25,7 @@ class ExamsController extends Controller
      */
     public function create()
     {
-        //
+        //invalid
     }
 
     /**
@@ -36,7 +36,26 @@ class ExamsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $response = Http::withToken(session('miToken'))->post('http://127.0.0.1:8000/api/exams', [
+            'duration' => $request->duration,
+            'course_id' => $request->course_id,
+            'name' => $request->name,
+        ]);
+
+        $res = $response->json();
+
+        if ($res['success']) {
+
+            $request->session()->flash('success', $res['message']);
+            return redirect('exams/'.$res['exam']);
+
+        } else {
+
+            $request->session()->flash('errors', $res['message']);
+            return redirect('courses/'.$request->course_id);
+
+        }
+
     }
 
     /**

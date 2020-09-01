@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Http;
+
 class MaterialController extends Controller
 {
     /**
@@ -13,7 +15,7 @@ class MaterialController extends Controller
      */
     public function index()
     {
-        //
+        //invalid
     }
 
     /**
@@ -23,7 +25,7 @@ class MaterialController extends Controller
      */
     public function create(Request $request)
     {
-        //
+        //invalid
     }
 
     /**
@@ -34,7 +36,25 @@ class MaterialController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $material = fopen($request->attachment, 'r');
+        $response = Http::attach('material', $material)->withToken(session('miToken'))->post('http://127.0.0.1:8000/api/material', [
+            'topic_id' => $request->topic_id,
+            'course_id' => $request->course_id,
+            'name' => $request->name,
+        ]);
+
+        $res = $response->json();
+
+        if ($res['success']) {
+
+            $request->session()->flash('success', $res['message']);
+
+        } else {
+
+            $request->session()->flash('errors', $res['message']);
+        }
+
+        return redirect('courses/'.$request->course_id);
     }
 
     /**

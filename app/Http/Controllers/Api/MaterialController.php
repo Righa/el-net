@@ -49,11 +49,14 @@ class MaterialController extends Controller
             if ($request->hasfile('material')) {
                 $path = $request->material->store('public/material_repo');
                 $material->source = $path;
+                $material->type = $request->material->extension();
+            } else {
+                $material->source = $request->source;
+                $material->type = 'exam';
             }
 
             $material->course_id = $request->course_id;
             $material->name = $request->name;
-            $material->type = $request->material->extension();
             $material->topic_id = $request->topic_id;
 
             $material->save();

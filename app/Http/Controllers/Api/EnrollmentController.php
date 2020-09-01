@@ -33,12 +33,13 @@ class EnrollmentController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'pasword' => 'required',
+            'password' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response([
                 'success' => false, 
+                'message' => 'input errors',
                 'errors'=> $validator->errors()
             ]);
         }
@@ -52,7 +53,7 @@ class EnrollmentController extends Controller
             if ($request->password != $course->password) {
                 return response([
                     'success' => false, 
-                    'errors'=> 'The password is incorrect.'
+                    'message'=> 'The password is incorrect'
                 ]);
             }
 
@@ -118,11 +119,11 @@ class EnrollmentController extends Controller
     {
         try {
 
-            RegisteredCourse::find($id)->delete();
+            DB::table('registered_courses')->where(['course_id' => $id, 'user_id' => Auth::id()])->delete();
             
         } catch (Exception $e) {
             return response()->json([
-                'success' => true,
+                'success' => false,
                 'message' => $e
             ]);
         }

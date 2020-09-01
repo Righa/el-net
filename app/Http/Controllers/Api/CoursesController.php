@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Course;
 use App\User;
@@ -45,7 +46,6 @@ class CoursesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'subject_id' => 'required',
-            'teacher_id' => 'required',
             'name' => 'required|unique:courses',
             'description' => 'required',
             'password' => 'required|min:5',
@@ -64,12 +64,12 @@ class CoursesController extends Controller
             $course = new Course;
 
             if ($request->hasfile('avatar')) {
-                $path = $r->avatar->store('public/course_avatars');
+                $path = $request->avatar->store('public/course_avatars');
                 $course->avatar_url = $path;
             }
 
             $course->subject_id = $request->subject_id;
-            $course->teacher_id = Auth::id();
+            $course->user_id = Auth::id();
             $course->name = $request->name;
             $course->description = $request->description;
             $course->password = $request->password;
@@ -106,6 +106,12 @@ class CoursesController extends Controller
 
         foreach ($topics as $topic) {
             $topic->material;
+
+            foreach ($topic->material as $material) {
+                if ($material->type != 'exam') {
+                    $material->source = Storage::url($material->source);
+                }
+            }
         }
 
         return response([

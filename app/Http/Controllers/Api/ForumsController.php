@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use App\Forum;
 use DB;
 
@@ -55,7 +57,7 @@ class ForumsController extends Controller
 
             $forum = new Forum;
 
-            $forum->student_id = Auth::id();
+            $forum->user_id = Auth::id();
             $forum->subject_id = $request->subject_id;
             $forum->question = $request->question;
 
@@ -71,7 +73,8 @@ class ForumsController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'forum was created'
+            'message' => 'forum was created',
+            'forum' => $forum->id
         ]);
     }
 

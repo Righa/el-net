@@ -37,10 +37,21 @@
                     @if(session('user')['role'] == 'teacher')
 
                     <div class="col-md-3"><a href="{{url('courses/create')}} " class="btn btn-primary btn-block">+ Create New Course</a></div>
-
                     @endif
 
                 </div>
+
+                            @if(Session::has('success'))
+
+                            <div class="alert alert-success">{{session('success')}} </div>
+
+                            @endif
+
+                            @if(Session::has('errors'))
+
+                            <div class="alert alert-danger">{{session('errors')}} </div>
+
+                            @endif
             </div>
 
           <div class="card-body">
@@ -50,7 +61,9 @@
                     @foreach($res['courses'] as $course)
 
                     <div class="card" style="margin-bottom: 22px">
-                        <div class="card-header"><h3>{{ $course['name'] }}</h3></div>
+                        <div class="card-header">
+                            <h3>{{ $course['name'] }}</h3>
+                        </div>
 
                         <div class="card-body">
                             <div class="row">
@@ -67,6 +80,8 @@
                                     <img src="{{ $course['user']['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px"> {{ $course['user']['first_name'] }} {{ $course['user']['last_name'] }}
                                 </div>
 
+                                <?php $regd = false; ?>
+
                                 @foreach($res['myCourses'] as $enrolled)
 
                                 @if($enrolled['course']['id'] == $course['id'])
@@ -75,10 +90,17 @@
                                     <a href="courses/{{ $course['id'] }}" class="btn btn-primary btn-block">View</a>
                                 </div>
 
-                                @else
+                                <?php $regd = true; ?>
+
+                                @endif
+
+                                @endforeach
+
+                                <?php if ($regd == false): ?>
 
                                 <div class="col-md-4">
-                                    <form method="post" action="">
+                                    <form method="post" action="{{url('enrollment')}}">
+                                        @csrf
                                         <input type="hidden" name="course_id" value="{{$course['id']}}">
                                         <div class="input-group mb-3">
                                           <input type="password" name="password" class="form-control" placeholder="password">
@@ -89,9 +111,8 @@
                                     </form>
                                 </div>
 
-                                @endif
+                                <?php endif ?>
 
-                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -193,7 +214,19 @@
                         @csrf
                         <div class="form-group">
                           <label for="answer">Your Question:</label>
-                          <textarea class="form-control" rows="4" id="answer"></textarea>
+                          <textarea class="form-control" rows="4" name="question" id="answer"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <select type="text" name="subject" class="form-control custom-select">
+
+                                @foreach($res['subjects'] as $subject)
+
+                                <option value="{{$subject['id']}} ">{{$subject['name']}} </option>
+
+                                @endforeach
+
+                            </select>
                         </div>
                         <div><button type="submit" class="btn btn-primary">SUBMIT</button></div>
                     </form>

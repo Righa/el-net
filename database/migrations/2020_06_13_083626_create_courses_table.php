@@ -19,7 +19,7 @@ class CreateCoursesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('name');
             $table->string('description');
-            $table->string('avatar_url')->default('public/course_avatars/image-placeholder.png');
+            $table->string('avatar_url')->nullable();
             $table->string('password');
             $table->timestamps();
 

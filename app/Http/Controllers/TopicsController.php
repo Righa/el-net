@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Http;
+
 class TopicsController extends Controller
 {
     /**
@@ -13,7 +15,7 @@ class TopicsController extends Controller
      */
     public function index()
     {
-        //
+        //invalid
     }
 
     /**
@@ -23,7 +25,7 @@ class TopicsController extends Controller
      */
     public function create()
     {
-        //
+        //invalid
     }
 
     /**
@@ -34,7 +36,23 @@ class TopicsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $response = Http::withToken(session('miToken'))->post('http://127.0.0.1:8000/api/topics', [
+            'course_id' => $request->course_id,
+            'name' => $request->name
+        ]);
+
+        $res = $response->json();
+
+        if ($res['success']) {
+
+            $request->session()->flash('success', $res['message']);
+
+        } else {
+
+            $request->session()->flash('errors', $res['message']);
+        }
+
+        return redirect('courses/'.$request->course_id);
     }
 
     /**

@@ -94,13 +94,13 @@
 
                 <br><br><br>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/righa" target="_blank" class="btn btn-primary btn-lg m-3">Lawrence</a>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/raphael340" target="_blank" class="btn btn-primary btn-lg m-3">Raphael</a>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/mathew10005" target="_blank" class="btn btn-primary btn-lg m-3">Matthew</a>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/mainina9" target="_blank" class="btn btn-primary btn-lg m-3">Maina</a>
                 
               </div>
 
@@ -122,13 +122,13 @@
 
                 <br><br><br>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/righa" target="_blank" class="btn btn-primary btn-lg m-3">Lawrence</a>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/raphael340" target="_blank" class="btn btn-primary btn-lg m-3">Raphael</a>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/mathew10005" target="_blank" class="btn btn-primary btn-lg m-3">Matthew</a>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/mainina9" target="_blank" class="btn btn-primary btn-lg m-3">Maina</a>
                 
               </div>
 
@@ -150,13 +150,13 @@
 
                 <br><br><br>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/righa" target="_blank" class="btn btn-primary btn-lg m-3">Lawrence</a>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/raphael340" target="_blank" class="btn btn-primary btn-lg m-3">Raphael</a>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/mathew10005" target="_blank" class="btn btn-primary btn-lg m-3">Matthew</a>
 
-                <a href="https://github.com/righa" class="btn btn-primary btn-lg m-3">Lawrence</a>
+                <a href="https://github.com/mainina9" target="_blank" class="btn btn-primary btn-lg m-3">Maina</a>
 
               </div>
 

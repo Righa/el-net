@@ -32,16 +32,13 @@ class ExamsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:5',
-            'takes_allowed' => 'required',
             'duration' => 'required',
-            'open' => 'required|date',
-            'close' => 'required|date',
-            'pasword' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response([
-                'success' => false, 
+                'success' => false,
+                'message' => 'input errors',
                 'errors'=> $validator->errors()
             ]);
         }
@@ -51,24 +48,22 @@ class ExamsController extends Controller
             $exam = new Exam;
             $exam->course_id = $request->course_id;
             $exam->name = $request->name;
-            $exam->takes_allowed = $request->takes_allowed;
             $exam->duration = $request->duration;
-            $exam->password = $request->password;
-            $exam->open = $request->open;
-            $exam->close = $request->close;
 
             $exam->save();
             
         } catch (Exception $e) {
             return response([
                 'success' => false, 
+                'message' => 'internal errors',
                 'errors'=> $e
             ]);            
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'exam has been created'
+            'message' => 'exam has been created',
+            'exam' => $exam->id
         ]);
     }
 
@@ -101,21 +96,14 @@ class ExamsController extends Controller
         $affected = DB::table('exams')->where('id', $id)->update([
             'course_id' => $request->course_id,
             'name' => $request->name,
-            'takes_allowed' => $request->takes_allowed,
             'duration' => $request->duration,
-            'password' => $request->password,
-            'open' => $request->open,
-            'close' => $request->close
         ]);
 
 
         $validator = Validator::make($request->all(), [
             'name' => 'min:5',
-            'takes_allowed' => 'integer',
             'duration' => 'integer',
             'password' => 'min:5',
-            'open' => 'date',
-            'close' => 'date',
         ]);
 
         if ($validator->fails()) {
