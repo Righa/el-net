@@ -28,38 +28,79 @@
 
 
 
-    <div id="allCourses" class="container tab-pane active"><br>
-      <h3>HOME</h3>
+    <div id="allCourses" class=" tab-pane active"><br>
+      <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col"><h3>HOME</h3></div>
 
-      <div class="row justify-content-center">
-        <div class="col-md-10">
+                    @if(session('user')['role'] == 'teacher')
 
-            @foreach($res['courses'] as $course)
+                    <div class="col-md-3"><a href="{{url('courses/create')}} " class="btn btn-primary btn-block">+ Create New Course</a></div>
 
-            <a href="courses/{{ $course['id'] }}" class="card">
-                <div class="card-header">{{ $course['name'] }}</div>
+                    @endif
 
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-3"><img src="{{ $course['avatar_url'] }}" class="rounded" style="height: 99px; width: 99px"></div>
+                </div>
+            </div>
 
-                        <div class="col">
-                            {{ $course['description'] }} 
+          <div class="card-body">
+              <div class="row justify-content-center">
+                <div class="col-md-12">
+
+                    @foreach($res['courses'] as $course)
+
+                    <div class="card" style="margin-bottom: 22px">
+                        <div class="card-header"><h3>{{ $course['name'] }}</h3></div>
+
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3"><img src="{{ $course['avatar_url'] }}" class="rounded" style="height: 99px; width: 99px"></div>
+
+                                <div class="col">
+                                    {{ $course['description'] }} 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col">
+                                    <img src="{{ $course['user']['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px"> {{ $course['user']['first_name'] }} {{ $course['user']['last_name'] }}
+                                </div>
+
+                                @foreach($res['myCourses'] as $enrolled)
+
+                                @if($enrolled['course']['id'] == $course['id'])
+
+                                <div class="col-md-4">
+                                    <a href="courses/{{ $course['id'] }}" class="btn btn-primary btn-block">View</a>
+                                </div>
+
+                                @else
+
+                                <div class="col-md-4">
+                                    <form method="post" action="">
+                                        <input type="hidden" name="course_id" value="{{$course['id']}}">
+                                        <div class="input-group mb-3">
+                                          <input type="password" name="password" class="form-control" placeholder="password">
+                                          <div class="input-group-append">
+                                            <button class="btn btn-primary" type="submit">Enroll</button>
+                                          </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                @endif
+
+                                @endforeach
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col">
-                            <img src="{{ $course['user']['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px"> {{ $course['user']['first_name'] }} {{ $course['user']['last_name'] }}
-                        </div>
-                    </div>
-                </div>
-            </a>
 
-            @endforeach
-            
-        </div>
+                    @endforeach
+                    
+                </div>
+              </div>
+          </div>
       </div>
     </div>
 
@@ -73,37 +114,58 @@
 
 
     <div id="courses" class="container tab-pane fade"><br>
-      <h3>My Courses</h3>
+      
 
-      <div class="row justify-content-center">
-        <div class="col-md-10">
+      <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col"><h3>MY COURSES</h3></div>
 
-            @foreach($res['myCourses'] as $course)
+                    @if(session('user')['role'] == 'teacher')
 
-            <a href="courses/{{ $course['course']['id'] }}" class="card">
-                <div class="card-header">{{ $course['course']['name'] }}</div>
+                    <div class="col-md-3"><a href="{{url('courses/create')}} " class="btn btn-primary btn-block">+ Create New Course</a></div>
 
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-3"><img src="{{ $course['course']['avatar_url'] }}" class="rounded" style="height: 99px; width: 99px"></div>
+                    @endif
+                    
+                </div>
+            </div>
 
-                        <div class="col">
-                            {{ $course['course']['description'] }} 
+            <div class="card-body">
+                <div class="row justify-content-center">
+                    <div class="col-md-12">
+
+                    @foreach($res['myCourses'] as $course)
+
+                    <div class="card" style="margin-bottom: 22px">
+                        <div class="card-header"><h3>{{ $course['course']['name'] }}</h3></div>
+
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3"><img src="{{ $course['course']['avatar_url'] }}" class="rounded" style="height: 99px; width: 99px"></div>
+
+                                <div class="col">
+                                    {{ $course['course']['description'] }} 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col">
+                                    <img src="{{ $course['course']['user']['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px"> {{ $course['course']['user']['first_name'] }} {{ $course['course']['user']['last_name'] }}
+                                </div>
+
+                                <div class="col-md-3">
+                                    <a href="courses/{{ $course['course']['id'] }}" class="btn btn-primary btn-block">View</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col">
-                            <img src="{{ $course['course']['user']['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px"> {{ $course['course']['user']['first_name'] }} {{ $course['course']['user']['last_name'] }}
-                        </div>
-                    </div>
-                </div>
-            </a>
 
-            @endforeach
-            
-        </div>
+                    @endforeach
+                    
+                </div>
+              </div>
+          </div>
       </div>
     </div>
 
@@ -117,31 +179,56 @@
 
 
     <div id="forums" class="container tab-pane fade"><br>
-      <h3>Forums</h3>
       
-      <div class="row justify-content-center">
-        <div class="col-md-10">
-            
-            @foreach($res['forums'] as $forum)
 
-            <a href="forums/{{ $forum['id'] }}" class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col">
-                            <img src="{{ $forum['user']['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px"><strong>{{ $forum['user']['first_name'] }} </strong>
-                            <p>{{ $forum['question'] }} </p>
-                        </div>
-                        <div class="col-sm-2 text-success">
-                            x answers
-                        </div>
-                    </div>
+      <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col"><h3>FORUMS</h3></div>
+                    <div class="col-md-3"><button data-toggle="collapse" data-target="#newforum" class="btn btn-primary btn-block">+ Create New Forum</button></div>
                 </div>
-            </a>
-            
-            @endforeach
+                <div id="newforum" class="collapse" >
 
-        </div>
+                    <form method="post" action="{{url('forums')}}">
+                        @csrf
+                        <div class="form-group">
+                          <label for="answer">Your Question:</label>
+                          <textarea class="form-control" rows="4" id="answer"></textarea>
+                        </div>
+                        <div><button type="submit" class="btn btn-primary">SUBMIT</button></div>
+                    </form>
+
+                </div>
+            </div>
+            <div class="card-body">
+                  <div class="row justify-content-center">
+                    <div class="col-md-12">
+                        
+                        @foreach($res['forums'] as $forum)
+
+                        <div class="card" style="margin-bottom: 22px">
+                            <div class="card-header">
+                                <img src="{{ $forum['user']['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px"><strong> {{ $forum['user']['first_name'] }} {{ $forum['user']['last_name'] }}:</strong>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <p>{{ $forum['question'] }} </p>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <a href="forums/{{ $forum['id'] }}" class="btn btn-primary btn-block">{{count($forum['forum_answers'])}} answers</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        @endforeach
+
+                    </div>
+                  </div>
+            </div>
       </div>
+            
     </div>
 
   </div>

@@ -59,7 +59,7 @@ class AuthController extends Controller
             session(['miToken' => $res['token']]);
             session(['user' => $res['user']]);
 
-            return redirect('courses');
+            return redirect('home');
 
         } else {
 
@@ -112,7 +112,7 @@ class AuthController extends Controller
             session(['miToken' => $res['token']]);
             session(['user' => $res['user']]);
 
-            return redirect('courses');
+            return redirect('home');
 
         } else {
 
@@ -150,61 +150,35 @@ class AuthController extends Controller
     public function profile(Request $request)
     {
 
-        $validator = Validator::make($request->all(), [
-            'birthday' => 'date',
-            'first_name' => 'min:2',
-            'last_name' => 'min:2',
-        ]);
+        if ($request->hasFile('avatar')) {
 
-        if ($validator->fails()) {
-            return response([
-                'success' => false, 
-                'errors'=> $validator->errors()
+            $photo = fopen($request->avatar, 'r');
+            $response = Http::attach('avatar', $photo)->withToken(session('miToken'))->post('http://127.0.0.1:8000/api/profile', [
+                'gender' => $request->gender,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'birthday' => $request->birthday
+            ]);
+
+        } else {
+
+            $response = Http::withToken(session('miToken'))->post('http://127.0.0.1:8000/api/profile', [
+                'gender' => $request->gender,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'birthday' => $request->birthday
             ]);
         }
-
-        $user = Auth::user();
-
-        try {
-
-            $changes = 5;
-
-            if ($request->hasfile('avatar')) {
-
-                Storage::delete($user->avatar_url);
-                $path = $r->avatar->store('public/user_avatars');
-                $user->avatar_url = $path;
-
-            } elseif ($request->drop_avatar) {
-
-                Storage::delete($user->avatar_url);
-                $user->avatar_url = null;
-
-            } else {
-                $changes--;
-            }
-
-            ($request->first_name) ? $user->first_name = $request->first_name : $changes--;
-            ($request->last_name) ? $user->last_name = $request->last_name : $changes--;
-            ($request->birthday) ? $user->birthday = $request->birthday : $changes--;
-            ($request->gender) ? $user->gender = $request->gender : $changes--;
-
-            $user->save();
-            
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'internal errors'
-            ]);
+        $res = $response->json();
+        
+        if ($res['success']) {
+            session(['user' => $res['user']]);
+            $request->session()->flash('success', $res['message']);
+            return view('profile');
+        } else {
+            $request->session()->flash('errors', $res['message']);
+            return view('profile');
         }
-
-        $user->avatar_url = Storage::url($user->avatar_url);
-            
-        return response()->json([
-            'success' => true,
-            'message' => $changes.' changes have been saved',
-            'user' => $user
-        ]);
     }
 
     /**

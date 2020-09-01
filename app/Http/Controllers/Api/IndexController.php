@@ -44,7 +44,6 @@ class IndexController extends Controller
         foreach ($forums as $forum) {
             $forum->user;
             $forum->forum_answers;
-            //$forum->forum_answers->user;
             $forum->user->avatar_url = Storage::url($forum->user->avatar_url);
         }
 

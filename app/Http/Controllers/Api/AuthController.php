@@ -135,7 +135,7 @@ class AuthController extends Controller
             if ($request->hasfile('avatar')) {
 
                 Storage::delete($user->avatar_url);
-                $path = $r->avatar->store('public/user_avatars');
+                $path = $request->avatar->store('public/user_avatars');
                 $user->avatar_url = $path;
 
             } elseif ($request->drop_avatar) {
@@ -157,7 +157,7 @@ class AuthController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'internal errors'
+                'message' => $e
             ]);
         }
 

@@ -20,6 +20,7 @@ class CreateMaterialsTable extends Migration
             $table->string('name');
             $table->string('type');
             $table->string('source');
+            $table->boolean('enabled')->default(false);
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');

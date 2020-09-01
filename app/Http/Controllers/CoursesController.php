@@ -26,7 +26,9 @@ class CoursesController extends Controller
      */
     public function create()
     {
-        //
+        $response = Http::withToken(session('miToken'))->get('http://127.0.0.1:8000/api/subjects');
+        $res = $response->json();
+        return view('newcourse')->with('res', $res);
     }
 
     /**

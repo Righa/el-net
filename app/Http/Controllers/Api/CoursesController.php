@@ -99,8 +99,9 @@ class CoursesController extends Controller
     public function show($id)
     {
         $course = Course::find($id);
-        $course->teacher;
+        $course->user;
         $course->avatar_url = Storage::url($course->avatar_url);
+        $course->user->avatar_url = Storage::url($course->user->avatar_url);
         $topics = $course->topics;
 
         foreach ($topics as $topic) {

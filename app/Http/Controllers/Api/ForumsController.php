@@ -21,6 +21,7 @@ class ForumsController extends Controller
 
         foreach ($forums as $forum) {
             $user = $forum->user;
+            $forum->forum_answers;
             $forum->subject;
         }
 
@@ -83,11 +84,14 @@ class ForumsController extends Controller
     public function show($id)
     {
         $forum = Forum::find($id);
+        $forum->subject;
+        $forum->user;
+        $forum->user->avatar_url = Storage::url($forum->user->avatar_url);
         $answers = $forum->forum_answers;
 
         foreach ($answers as $answer) {
-            $answer->votes;
             $answer->user;
+            $answer->votes;
             $answer->user->avatar_url = Storage::url($answer->user->avatar_url);
         }
 

@@ -17,11 +17,8 @@ class CreateExamsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('course_id');
             $table->string('name');
-            $table->integer('takes_allowed');
             $table->integer('duration');
             $table->string('password');
-            $table->date('open');
-            $table->date('close');
             $table->timestamps();
 
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');

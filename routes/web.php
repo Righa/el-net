@@ -40,7 +40,7 @@ Route::group(['middleware' => 'miAuth'], function() {
 		'enrollment' => 'EnrollmentController',
 		'exam_answers' => 'ExamAnswersController',
 		'forum_answers' => 'ForumAnswersController',
-		'materials' => 'MaterialsController',
+		'materials' => 'MaterialController',
 		'subjects' => 'SubjectsController',
 		'takes' => 'TakesController',
 		'topics' => 'TopicsController',
@@ -48,13 +48,5 @@ Route::group(['middleware' => 'miAuth'], function() {
 	]);
 });
 
-/*
-@todo 	user->upcoming exams
-		user->courses
-		user->takes
-		user->takes
-		user->takes
-		user->takes
-		user->takes
-
-		*/
+//new course, new forum, new material, new exam, 
+//enroll, forum answer, vote forum, new topic, unenroll

@@ -16,11 +16,8 @@ class ExamsSeeder extends Seeder
         DB::table('exams')->insert([
             'course_id' => '1',
             'name' => 'Good exam',
-            'takes_allowed' => '2',
             'duration' => '60',
             'password' => 'password',
-            'open' => '2020_12_12',
-            'close' => '2020_12_12',
         ]);
 
         DB::table('exam_questions')->insert([
