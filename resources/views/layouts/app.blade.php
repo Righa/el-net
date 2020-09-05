@@ -47,7 +47,7 @@
                                 </li>
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre><img src="{{ session('user')['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre><img src="{{ session('user')['avatar_url'] ?? '/storage/user_avatars/blank_profile_pic.png' }}" class="rounded-circle" style="height: 33px; width: 33px">
                                     {{ session('user')['first_name'] }} <span class="caret"></span>
                                 </a>
 

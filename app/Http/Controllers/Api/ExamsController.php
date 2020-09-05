@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use App\ExamQuestion;
+use App\Material;
 use App\Exam;
 use DB;
 
@@ -49,9 +51,22 @@ class ExamsController extends Controller
             $exam->course_id = $request->course_id;
             $exam->name = $request->name;
             $exam->duration = $request->duration;
+            $exam->password = $request->password;
 
             $exam->save();
-            
+
+            //create material link
+
+            $material = new Material;
+
+            $material->source = $exam->id;
+            $material->type = 'exam';
+            $material->course_id = $request->course_id;
+            $material->name = $exam->name;
+            $material->topic_id = $request->topic_id;
+
+            $material->save();
+
         } catch (Exception $e) {
             return response([
                 'success' => false, 
@@ -76,7 +91,14 @@ class ExamsController extends Controller
     public function show($id)
     {
         $exam = Exam::find($id);
+        $exam->course->user;
         $exam->exam_questions;
+
+        foreach ($exam->exam_questions as $question) {
+            if ($question->attachment != null) {
+                $question->attachment = Storage::url($question->attachment);
+            }
+        }
 
         return response()->json([
             'success' => true,
@@ -93,17 +115,10 @@ class ExamsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $affected = DB::table('exams')->where('id', $id)->update([
-            'course_id' => $request->course_id,
-            'name' => $request->name,
-            'duration' => $request->duration,
-        ]);
-
 
         $validator = Validator::make($request->all(), [
-            'name' => 'min:5',
-            'duration' => 'integer',
-            'password' => 'min:5',
+            'name' => 'min:2',
+            'duration' => 'integer'
         ]);
 
         if ($validator->fails()) {
@@ -113,27 +128,20 @@ class ExamsController extends Controller
             ]);
         }
 
-        $course = Course::find($id);
-
-        $changes = 4;
-
         try {
 
-            if ($request->hasfile('avatar')) {
-                Storage::delete($course->avatar_url);
-                $path = $r->avatar->store('public/course_avatars');
-                $course->avatar_url = $path;
-            } else {
-                $changes--;
-            }
+            $exam = Exam::find($id);
+
+            $changes = 3;
             
-            ($request->name) ? $course->name = $request->name : $changes--;
-            ($request->description) ? $course->description = $request->description : $changes--;
-            ($request->password) ? $course->password = $request->password : $changes--;
+            ($request->name) ? $exam->name = $request->name : $changes--;
+            ($request->duration) ? $exam->duration = $request->duration : $changes--;
+            ($request->instructions) ? $exam->instructions = $request->instructions : $changes--;
 
         } catch (Exception $e) {
             return response([
                 'success' => false, 
+                'message' => 'input errors',
                 'errors'=> $e
             ]);
         }
@@ -152,7 +160,7 @@ class ExamsController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('exams')->where('id', $id)->delete();
+        Exam::find($id)->delete();
 
         return response()->json([
             'success' => true,
@@ -160,10 +168,5 @@ class ExamsController extends Controller
         ]);
     }
 
-
-
-
-
-    //new logic here
     
 }

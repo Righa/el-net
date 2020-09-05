@@ -46,7 +46,9 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        $user->avatar_url = Storage::url($user->avatar_url);
+        if ($user->avatar_url != null) {
+            $user->avatar_url = Storage::url($user->avatar_url);
+        }
 
     	return response()->json([
     		'success' => true,
@@ -113,7 +115,7 @@ class AuthController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'birthday' => 'date',
+            //'birthday' => 'date',
             'first_name' => 'min:2',
             'last_name' => 'min:2',
         ]);
@@ -161,7 +163,9 @@ class AuthController extends Controller
             ]);
         }
 
-        $user->avatar_url = Storage::url($user->avatar_url);
+        if ($user->avatar_url != null) {
+            $user->avatar_url = Storage::url($user->avatar_url);
+        }
             
         return response()->json([
             'success' => true,

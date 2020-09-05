@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\RegisteredCourse;
 use App\Course;
+use App\Exam;
 use App\User;
 use Exception;
 use DB;
@@ -26,8 +28,12 @@ class CoursesController extends Controller
 
         foreach ($courses as $course) {
             $course->user;
-            $course->user->avatar_url = Storage::url($course->user->avatar_url);
-            $course->avatar_url = Storage::url($course->avatar_url);
+            if ($course->user->avatar_url != null) {
+                $course->user->avatar_url = Storage::url($course->user->avatar_url);
+            }
+            if ($course->avatar_url != null) {
+                $course->avatar_url = Storage::url($course->avatar_url);
+            }
         }
 
         return response()->json([
@@ -75,6 +81,13 @@ class CoursesController extends Controller
             $course->password = $request->password;
 
             $course->save();
+
+            //enroll teacher :))
+            $enrollment = new RegisteredCourse;
+            $enrollment->user_id = Auth::id();
+            $enrollment->course_id = $course->id;
+
+            $enrollment->save();
             
         } catch (Exception $e) {
             return response([
@@ -100,15 +113,23 @@ class CoursesController extends Controller
     {
         $course = Course::find($id);
         $course->user;
-        $course->avatar_url = Storage::url($course->avatar_url);
-        $course->user->avatar_url = Storage::url($course->user->avatar_url);
+
+        if ($course->user->avatar_url != null) {
+            $course->user->avatar_url = Storage::url($course->user->avatar_url);
+        }
+        if ($course->avatar_url != null) {
+            $course->avatar_url = Storage::url($course->avatar_url);
+        }
+
         $topics = $course->topics;
 
         foreach ($topics as $topic) {
             $topic->material;
 
             foreach ($topic->material as $material) {
-                if ($material->type != 'exam') {
+                if ($material->type == 'exam') {
+                    $material->source = Exam::find($material->source);
+                } else {
                     $material->source = Storage::url($material->source);
                 }
             }

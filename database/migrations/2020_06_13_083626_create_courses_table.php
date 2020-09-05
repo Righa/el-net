@@ -18,7 +18,7 @@ class CreateCoursesTable extends Migration
             $table->unsignedBigInteger('subject_id');
             $table->unsignedBigInteger('user_id');
             $table->string('name');
-            $table->string('description');
+            $table->string('description', 666);
             $table->string('avatar_url')->nullable();
             $table->string('password');
             $table->timestamps();

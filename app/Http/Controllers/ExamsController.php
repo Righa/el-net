@@ -39,7 +39,9 @@ class ExamsController extends Controller
         $response = Http::withToken(session('miToken'))->post('http://127.0.0.1:8000/api/exams', [
             'duration' => $request->duration,
             'course_id' => $request->course_id,
+            'topic_id' => $request->topic_id,
             'name' => $request->name,
+            'password' => $request->password,
         ]);
 
         $res = $response->json();
@@ -47,11 +49,13 @@ class ExamsController extends Controller
         if ($res['success']) {
 
             $request->session()->flash('success', $res['message']);
+
             return redirect('exams/'.$res['exam']);
 
         } else {
 
             $request->session()->flash('errors', $res['message']);
+            
             return redirect('courses/'.$request->course_id);
 
         }
@@ -91,7 +95,24 @@ class ExamsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $response = Http::withToken(session('miToken'))->put('http://127.0.0.1:8000/api/exams/'.$id, [
+            'duration' => $request->duration,
+            'name' => $request->name,
+            'instructions' => $request->instructions,
+        ]);
+
+        $res = $response->json();
+
+        if ($res['success']) {
+
+            $request->session()->flash('success', $res['message']);
+
+        } else {
+
+            $request->session()->flash('errors', $res['message']);
+        }
+            
+        return redirect('exams/'.$id);
     }
 
     /**
@@ -102,6 +123,16 @@ class ExamsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $response = Http::withToken(session('miToken'))->delete('http://127.0.0.1:8000/api/exams/'.$id);
+
+        $res = $response->json();
+        
+        if ($res['success']) {
+            $request->session()->flash('success', $res['message']);
+        } else {
+            $request->session()->flash('errors', $res['message']);
+        }
+
+        return redirect('exams/'.$id);
     }
 }

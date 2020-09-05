@@ -28,16 +28,26 @@ class IndexController extends Controller
 	        foreach ($myCourses as $reg) {
 	        	$reg->course;
 	            $reg->course->user;
-	            $reg->course->user->avatar_url = Storage::url($reg->course->user->avatar_url);
-	            $reg->course->avatar_url = Storage::url($reg->course->avatar_url);
+
+                if ($reg->course->user->avatar_url != null) {
+                    $reg->course->user->avatar_url = Storage::url($reg->course->user->avatar_url);
+                }
+                if ($reg->course->avatar_url != null) {
+                    $reg->course->avatar_url = Storage::url($reg->course->avatar_url);
+                }
 	        }
 
         //more data for courses
 
         foreach ($courses as $course) {
             $course->user;
-            $course->user->avatar_url = Storage::url($course->user->avatar_url);
-            $course->avatar_url = Storage::url($course->avatar_url);
+
+            if ($course->user->avatar_url != null) {
+                $course->user->avatar_url = Storage::url($course->user->avatar_url);
+            }
+            if ($course->avatar_url != null) {
+                $course->avatar_url = Storage::url($course->avatar_url);
+            }
         }
 
         //more data for forums
@@ -45,7 +55,9 @@ class IndexController extends Controller
         foreach ($forums as $forum) {
             $forum->user;
             $forum->forum_answers;
-            $forum->user->avatar_url = Storage::url($forum->user->avatar_url);
+            if ($forum->user->avatar_url != null) {
+                $forum->user->avatar_url = Storage::url($forum->user->avatar_url);
+            }
         }
 
         return response()->json([

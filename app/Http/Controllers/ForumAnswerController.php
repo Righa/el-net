@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class ForumAnswerController extends Controller
 {
@@ -13,7 +14,7 @@ class ForumAnswerController extends Controller
      */
     public function index()
     {
-        //
+        //invalid
     }
 
     /**
@@ -23,7 +24,7 @@ class ForumAnswerController extends Controller
      */
     public function create()
     {
-        //
+        //invalid
     }
 
     /**
@@ -34,7 +35,20 @@ class ForumAnswerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $response = Http::withToken(session('miToken'))->post('http://127.0.0.1:8000/api/contributions', [
+            'forum_answer' => $request->answer,
+            'forum_id' => $request->forum_id
+        ]);
+
+        $res = $response->json();
+        
+        if ($res['success']) {
+            $request->session()->flash('success', $res['message']);
+        } else {
+            $request->session()->flash('errors', $res['message']);
+        }
+
+        return redirect('forums/'.$request->forum_id);
     }
 
     /**
