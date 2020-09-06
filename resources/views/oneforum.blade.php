@@ -46,7 +46,7 @@
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="card">
-                                        <div class="card-header p-1">
+                                        <div class="card-header p-0">
                                             <form method="post" action="{{url('votes')}} ">
                                                 @csrf
                                                 <input type="hidden" name="forum_id" value="{{$data['forum']['id']}} ">
@@ -55,8 +55,8 @@
                                                 <button type="submit" class="btn btn-sm btn-link text-success btn-block">upvote</button>
                                             </form>
                                         </div>
-                                        <div class="display-4 card-body text-center text-info p-1"><strong>{{ $answer['total_votes'] }}</strong></div>
-                                        <div class="card-footer p-1">
+                                        <div class="display-4 card-body text-center text-info p-0"><strong>{{ $answer['total_votes'] }}</strong></div>
+                                        <div class="card-footer p-0">
                                             <form method="post" action="{{url('votes')}} ">
                                                 @csrf
                                                 <input type="hidden" name="forum_id" value="{{$data['forum']['id']}} ">

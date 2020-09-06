@@ -13,15 +13,19 @@ use App\Forum;
 use App\Material;
 use App\Subject;
 use App\Exam;
+use DB;
 
 class IndexController extends Controller
 {
     public function index()
     {
-    	$user = Auth::user();
+        $user = Auth::user();
+        $users = User::all();
         $subjects = Subject::all();
         $courses = Course::all();
         $forums = Forum::all();
+        $exams = Exam::all();
+        $activity = new UserActivity;
 
 	        $myCourses = $user->registered_courses;
 
@@ -60,14 +64,35 @@ class IndexController extends Controller
             }
         }
 
+        if (Auth::user()->role == 'teacher') {
+            $activity->online = DB::table('activities')->where('active', true)->count();
+        }
+
         return response()->json([
             'success' => true,
             'courses' => $courses,
             'subjects' => $subjects,
             'myCourses' => $myCourses,
-            'forums' => $forums
+            'forums' => $forums,
+            'users' => $users,
+            'exams' => $exams,
+            'activity' => $activity
         ]);
     }
 
     //searches
+}
+
+
+/**
+ * 
+ */
+class UserActivity
+{
+
+    function __construct()
+    {
+        $this->online = 0;
+        $this->foo = '';
+    }
 }

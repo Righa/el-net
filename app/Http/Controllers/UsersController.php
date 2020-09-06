@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class TakesController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,7 +21,7 @@ class TakesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
+    public function create()
     {
         //
     }
@@ -34,23 +34,7 @@ class TakesController extends Controller
      */
     public function store(Request $request)
     {
-        $response = Http::withToken(session('miToken'))->post('http://127.0.0.1:8000/api/takes', [
-            'exam_id' => $request->exam_id,
-            'password' => $request->password
-        ]);
-
-        $res = $response->json();
-
-        if ($res['success']) {
-
-            $request->session()->flash('success', $res['message']);
-            return redirect('exam/'.$request->exam_id);
-
-        } else {
-
-            $request->session()->flash('errors', $res['message']);
-            return redirect('takes/create/.'$request->exam_id);
-        }
+        //
     }
 
     /**

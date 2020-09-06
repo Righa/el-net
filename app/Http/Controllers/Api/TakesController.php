@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Take;
 use App\Exam;
 use App\ExamAnswer;
@@ -34,16 +35,23 @@ class TakesController extends Controller
             $taken = DB::table('takes')->where(['user_id', Auth::id()],['exam_id', $request->exam_id])->count();
             $exam = Exam::find($request->exam_id);
             
-            if ($taken == $exam->takes_allowed) {
+            if ($taken > 0) {
                 return response([
                     'success' => false,
-                    'message' => 'No more takes allowed'
+                    'message' => 'No more attempts allowed'
+                ]);
+            }
+
+            if ($request->password != $exam->password) {
+                return response([
+                    'success' => false, 
+                    'message'=> 'The password is incorrect'
                 ]);
             }
             
             $take = new Take;
 
-            $take->user_id = $request->user_id;
+            $take->user_id = Auth::id();
             $take->exam_id = $request->exam_id;
 
             $take->save();
@@ -52,7 +60,7 @@ class TakesController extends Controller
             
             return response([
                 'success' => false,
-                'message' => 'Internal error',
+                'message' => 'internal errors',
                 'errors' => $e
             ]);
             
@@ -60,7 +68,7 @@ class TakesController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Exam submitted successfully'
+            'message' => 'Exam registered successfully'
         ]);
     }
 
@@ -76,21 +84,20 @@ class TakesController extends Controller
 
             $take = Take::find($id);
             $exam = $take->exam;
-            $answers = $take->answers;
+            $take->answers;
 
             $total = 0;
 
-            foreach ($answers as $answer) {
+            foreach ($take->answers as $answer) {
+                $answer->exam_question;
                 $total = $total + $answer->marks;
             }
-
-            $questions = $exam->exam_questions;
             
         } catch (Exception $e) {
             
             return response([
                 'success' => false,
-                'message' => 'Internal error',
+                'message' => 'internal errors',
                 'errors' => $e
             ]);
             

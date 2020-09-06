@@ -16,16 +16,6 @@ class ExamQuestion extends Model
     protected $guarded = ['id'];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'correct'
-    ];
-
-
-    /**
      * Relationship.
      *
      * @return exam

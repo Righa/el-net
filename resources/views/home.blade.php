@@ -27,7 +27,6 @@
 
 
 
-
     <div id="allCourses" class=" tab-pane active"><br>
       <div class="card">
             <div class="card-header">

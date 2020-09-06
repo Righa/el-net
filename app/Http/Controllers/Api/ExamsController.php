@@ -50,6 +50,7 @@ class ExamsController extends Controller
             $exam = new Exam;
             $exam->course_id = $request->course_id;
             $exam->name = $request->name;
+            $exam->instructions = $request->instructions;
             $exam->duration = $request->duration;
             $exam->password = $request->password;
 

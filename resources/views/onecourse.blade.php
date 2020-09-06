@@ -103,7 +103,12 @@
                                 @else
 
                                 <div class="col-sm-2">
-                                    <a href="" class="btn btn-primary btn-block">Attempt</a>
+                                    <form method="post" action="{{url('takes')}} ">
+                                        @csrf
+                                        <input type="hidden" name="exam_id" value="{{$material['source']['id']}}">
+
+                                        <button type="submit" class="btn btn-primary btn-block">OPEN</button>
+                                    </form>
                                 </div>
 
                                 @endif
@@ -113,7 +118,7 @@
 
                     @else
 
-                    <div href="" class="card mb-3">
+                    <div class="card mb-3">
                         <div class="card-body">
                              <div class="row">
                                  <div class="col-sm-1"><span class="rounded p-2 w-25 border border-primary">{{$material['type']}}</span></div>
@@ -189,11 +194,15 @@
                             </div>
                             <div class="form-group">
                                 <label><strong>Duration(in minutes)</strong></label><br>
-                                <input id="img-in" type="number" class="form-control" name="duration">
+                                <input type="number" class="form-control" name="duration">
+                            </div>
+                            <div class="form-group">
+                                <label><strong>Instructions</strong></label><br>
+                                <textarea class="form-control" name="instructions"></textarea>
                             </div>
                             <div class="form-group">
                                 <label><strong>Password</strong></label><br>
-                                <input id="img-in" type="password" class="form-control" name="password">
+                                <input type="password" class="form-control" name="password">
                             </div>
                             <div>
                                 <button type="submit" class="btn btn-primary">CREATE</button>
@@ -215,10 +224,10 @@
                             @method('patch')
                             <input type="hidden" name="topic_id" value="{{$topic['id']}}">
                             <input type="hidden" name="course_id" value="{{$data['courses']['id']}}">
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label><strong>File</strong></label><br>
                                 <input id="img-in" type="file" class="form-control" name="newattachment">
-                            </div>
+                            </div>-->
                             <div class="form-group">
                                 <label><strong>Name</strong></label>
                                 <input type="text" name="newname" class="form-control" value="{{$material['name']}} ">

@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/admin', function () {
+    return view('admin');
+});
 
 //api demo
 
@@ -37,15 +40,16 @@ Route::group(['middleware' => 'miAuth'], function() {
 		'exams' => 'ExamsController',
 		'forums' => 'ForumsController',
 		'courses' => 'CoursesController',
+		'materials' => 'MaterialController',
 		'enrollment' => 'EnrollmentController',
 		'exam_answers' => 'ExamAnswersController',
 		'exam_questions' => 'ExamQuestionController',
 		'forum_answers' => 'ForumAnswerController',
-		'materials' => 'MaterialController',
 		'subjects' => 'SubjectsController',
-		'takes' => 'TakesController',
 		'topics' => 'TopicsController',
 		'votes' => 'VotesController',
+		'takes' => 'TakesController',
+		'user' => 'UsersController',
 	]);
 });
 

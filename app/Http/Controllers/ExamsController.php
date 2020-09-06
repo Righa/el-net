@@ -41,6 +41,7 @@ class ExamsController extends Controller
             'course_id' => $request->course_id,
             'topic_id' => $request->topic_id,
             'name' => $request->name,
+            'instructions' => $request->instructions,
             'password' => $request->password,
         ]);
 

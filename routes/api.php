@@ -41,6 +41,7 @@ Route::group(['middleware' => 'jwtAuth'], function() {
 	# standard routes group
 
 	Route::apiResources([
+		'user' => 'Api\UsersController',
 		'votes' => 'Api\VotesController',
 		'takes' => 'Api\TakesController',
 		'exams' => 'Api\ExamsController',
@@ -51,8 +52,8 @@ Route::group(['middleware' => 'jwtAuth'], function() {
 		'material' => 'Api\MaterialController',
 		//'reviews' => 'Api\ExamAnswerController',
 		//'questions' => 'Api\QuestionsController',
-		'exam_questions' => 'Api\ExamQuestionController',
 		'enrollment' => 'Api\EnrollmentController',
 		'contributions' => 'Api\ForumAnswersController',
+		'exam_questions' => 'Api\ExamQuestionController',
 	]);
 });

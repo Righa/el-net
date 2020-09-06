@@ -31,46 +31,7 @@
 
                         <div class="col"><h1>{{ $exam['name'] }}</h1><p>Duration: {{$exam['duration']}} Minutes</p>
                         </div>
-
-                        <div class="col-sm-2"><button data-toggle="collapse" data-target="#edit-exam" class="btn btn-block btn-primary">EDIT EXAM DETAILS</button></div>
                         
-                    </div>
-                    <div id="edit-exam" class="collapse">
-                        <form method="post" action="{{url('exams/'.$exam['id'])}} ">
-                            @csrf
-                            @method('put')
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <strong>Exam Name</strong>
-                                        <input class="form-control" type="text" name="name" value="{{ $exam['name'] }}">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <strong>Exam Duration</strong>
-                                        <input class="form-control" type="number" name="duration" value="{{$exam['duration']}}">
-                                    </div>
-                                </div>
-                            </div>
-                                
-                            <div class="row">
-                                <div class="col">
-                                    <strong>Exam Instructions</strong>
-                                    <div class="form-group">
-                                        <textarea class="form-control" rows="5" name="instructions">{{ $exam['instructions'] }}</textarea> 
-                                    </div>
-                                </div>
-                            </div>
-                                
-                            <div class="row">
-                                <div class="col"></div>
-                                <div class="col-sm-2">
-                                    <button type="submit" class="btn btn-primary btn-block">UPDATE</button>
-                                </div>
-                            </div>
-                                
-                        </form>
                     </div>
 
 
