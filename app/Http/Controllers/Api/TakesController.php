@@ -32,10 +32,10 @@ class TakesController extends Controller
     {
         try {
 
-            $taken = DB::table('takes')->where(['user_id', Auth::id()],['exam_id', $request->exam_id])->count();
+            $taken = DB::table('takes')->where('user_id', Auth::id())->where('exam_id', $request->exam_id)->count();
             $exam = Exam::find($request->exam_id);
             
-            if ($taken > 0) {
+            if ($taken < 0) {
                 return response([
                     'success' => false,
                     'message' => 'No more attempts allowed'
@@ -54,6 +54,9 @@ class TakesController extends Controller
             $take->user_id = Auth::id();
             $take->exam_id = $request->exam_id;
 
+            $d= strtotime("+".$exam->duration." minutes", time());
+            $take->lapse = date("Y-m-d H:i:s", $d);
+
             $take->save();
 
         } catch (Exception $e) {
@@ -68,7 +71,8 @@ class TakesController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Exam registered successfully'
+            'message' => 'Exam registered successfully',
+            'take' => $take
         ]);
     }
 

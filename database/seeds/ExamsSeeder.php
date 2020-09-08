@@ -44,6 +44,7 @@ class ExamsSeeder extends Seeder
         DB::table('takes')->insert([
             'user_id' => '1',
             'exam_id' => $i + 1,
+            'lapse' => date('Y-m-d H:m:s'),
         ]);
 
 

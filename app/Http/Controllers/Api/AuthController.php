@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Activity;
+use DB;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -45,6 +47,13 @@ class AuthController extends Controller
     	}
 
         $user = Auth::user();
+
+        $activity = new Activity;
+
+        $activity->user_id = Auth::id();
+        $activity->active = true;
+
+        $activity->save();
 
         if ($user->avatar_url != null) {
             $user->avatar_url = Storage::url($user->avatar_url);
@@ -233,6 +242,8 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+        Activity::where('user_id', Auth::id())->where('active', true)->update(['active' => false]);
+        
         JWTAuth::invalidate(JWTAuth::parseToken($request->token));
         return response()->json([
             'success' => true,

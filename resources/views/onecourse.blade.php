@@ -102,12 +102,18 @@
 
                                 @else
 
-                                <div class="col-sm-2">
+                                <div class="col-md-4">
                                     <form method="post" action="{{url('takes')}} ">
                                         @csrf
+                                        <input type="hidden" name="course_id" value="{{$data['courses']['id']}}">
                                         <input type="hidden" name="exam_id" value="{{$material['source']['id']}}">
 
-                                        <button type="submit" class="btn btn-primary btn-block">OPEN</button>
+                                        <div class="input-group">
+                                          <input type="password" name="password" class="form-control" placeholder="password">
+                                          <div class="input-group-append">
+                                            <button type="submit" class="btn btn-primary btn-block">OPEN</button>
+                                          </div>
+                                        </div>
                                     </form>
                                 </div>
 

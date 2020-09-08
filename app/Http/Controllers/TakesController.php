@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class TakesController extends Controller
 {
@@ -21,7 +22,7 @@ class TakesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
+    public function create()
     {
         //
     }
@@ -44,12 +45,12 @@ class TakesController extends Controller
         if ($res['success']) {
 
             $request->session()->flash('success', $res['message']);
-            return redirect('exam/'.$request->exam_id);
+            session(['exam' => $res['take']]);
+            return redirect('exams/'.$res['take']['exam_id']);
 
         } else {
-
             $request->session()->flash('errors', $res['message']);
-            return redirect('takes/create/.'$request->exam_id);
+            return redirect('courses/'.$request->course_id);
         }
     }
 
@@ -72,7 +73,7 @@ class TakesController extends Controller
      */
     public function edit($id)
     {
-        //
+        echo "string";
     }
 
     /**

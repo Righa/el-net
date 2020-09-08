@@ -49,7 +49,7 @@ Route::group(['middleware' => 'miAuth'], function() {
 		'topics' => 'TopicsController',
 		'votes' => 'VotesController',
 		'takes' => 'TakesController',
-		'user' => 'UsersController',
+		'users' => 'UsersController',
 	]);
 });
 

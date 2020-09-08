@@ -12,15 +12,82 @@
             reader.readAsDataURL(e.files[0]);
         }
     }
+    function startTimer() {
+
+        var countDownDate = <?php echo strtotime(session('exam')['lapse']) ?> * 1000;
+        var now = <?php echo time() ?> * 1000;
+
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+            now = now + 1000;
+            // Find the distance between now an the count down date
+            var distance = countDownDate - now;
+            // Time calculations for days, hours, minutes and seconds
+            //var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            // Output the result in an element with id="demo"
+            document.getElementById("timer-clock").innerHTML = hours + "h " +
+            minutes + "m " + seconds + "s ";
+            // If the count down is over, write some text 
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("timer-clock").innerHTML = "EXPIRED";
+            }
+    
+        }, 1000);
+
+    }
+
 </script>
 @extends('layouts.app')
 
 @section('content')
+
+@if(Session::has('exam'))
+
+        <script type="text/javascript">startTimer()</script>
+
+        <div class="card fixed-top ml-4" style="margin-top: 111px;max-width: 333px">
+            <div class="card-header"><h4>Question Navigation</h4></div>
+            <div class="card-body d-flex flex-wrap align-content-start">
+
+
+                <div class="card m-1">
+                    <div class="card-body">x</div>
+                </div>
+                <div class="card m-1">
+                    <div class="card-body">x</div>
+                </div>
+                <div class="card m-1">
+                    <div class="card-body">x</div>
+                </div>
+                <div class="card m-1">
+                    <div class="card-body">x</div>
+                </div>
+                <div class="card m-1">
+                    <div class="card-body">x</div>
+                </div>
+                <div class="card m-1">
+                    <div class="card-body">x</div>
+                </div>
+
+
+
+
+
+
+
+            </div>
+            <div id="timer-card" class="card-footer alert-warning">Time Left: <h1 id="timer-clock"></h1></div>
+        </div>
+
+@endif
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            
-
             <div class="card">
                 <div class="card-header">
                     <div class="row">
@@ -56,7 +123,7 @@
 
                     @if($exam['course']['user']['id'] != session('user')['id'])
 
-                    <form method="post">
+                    <form id="paper-form" method="post">
 
                     @endif
 

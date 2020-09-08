@@ -17,6 +17,7 @@ class CreateTakesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('exam_id');
+            $table->dateTime('lapse');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

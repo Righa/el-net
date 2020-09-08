@@ -46,6 +46,10 @@ class IndexController extends Controller
         foreach ($courses as $course) {
             $course->user;
 
+            foreach ($course->students as $student) {
+               $student->user;
+            }
+
             if ($course->user->avatar_url != null) {
                 $course->user->avatar_url = Storage::url($course->user->avatar_url);
             }
@@ -64,8 +68,15 @@ class IndexController extends Controller
             }
         }
 
-        if (Auth::user()->role == 'teacher') {
+        if (Auth::user()->role == 'admin') {
             $activity->online = DB::table('activities')->where('active', true)->count();
+            $activity->day0 = DB::table('activities')->whereDay('created_at', date('d'))->count();
+            $activity->day1 = DB::table('activities')->whereDay('created_at', date('d')-1)->count();
+            $activity->day2 = DB::table('activities')->whereDay('created_at', date('d')-2)->count();
+            $activity->day3 = DB::table('activities')->whereDay('created_at', date('d')-3)->count();
+            $activity->day4 = DB::table('activities')->whereDay('created_at', date('d')-4)->count();
+            $activity->day5 = DB::table('activities')->whereDay('created_at', date('d')-5)->count();
+            $activity->day6 = DB::table('activities')->whereDay('created_at', date('d')-6)->count();
         }
 
         return response()->json([
@@ -87,12 +98,4 @@ class IndexController extends Controller
 /**
  * 
  */
-class UserActivity
-{
-
-    function __construct()
-    {
-        $this->online = 0;
-        $this->foo = '';
-    }
-}
+class UserActivity{}

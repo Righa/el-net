@@ -56,7 +56,7 @@ class UsersController extends Controller
 
         $user->save();
 
-        return response->json([
+        return response()->json([
             'success' => true,
             'message' => 'User role changed to '.$user->role
         ]);
@@ -70,9 +70,9 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        User::delete($id);
+        User::find($id)->delete();
 
-        return response->json([
+        return response()->json([
             'success' => true,
             'message' => 'user has been deleted'
         ]);
