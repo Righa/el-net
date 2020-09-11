@@ -1,7 +1,9 @@
 <script type="text/javascript">
+
     function transferClick() {
         document.querySelector('#img-in').click();
     }
+
     function displayImg(e) {
         if (e.files[0]) {
             var reader = new FileReader();
@@ -12,6 +14,7 @@
             reader.readAsDataURL(e.files[0]);
         }
     }
+
     function startTimer() {
 
         var countDownDate = <?php echo strtotime(session('exam')['lapse']) ?> * 1000;
@@ -34,6 +37,7 @@
             if (distance < 0) {
                 clearInterval(x);
                 document.getElementById("timer-clock").innerHTML = "EXPIRED";
+                document.getElementById("paper-form").submit();
             }
     
         }, 1000);
@@ -53,25 +57,13 @@
             <div class="card-header"><h4>Question Navigation</h4></div>
             <div class="card-body d-flex flex-wrap align-content-start">
 
+                @foreach($exam['exam_questions'] as $question)
 
                 <div class="card m-1">
-                    <div class="card-body">x</div>
+                    <div class="card-body"><a href="#question-{{$question['id']}}">{{$question['number']}}</a></div>
                 </div>
-                <div class="card m-1">
-                    <div class="card-body">x</div>
-                </div>
-                <div class="card m-1">
-                    <div class="card-body">x</div>
-                </div>
-                <div class="card m-1">
-                    <div class="card-body">x</div>
-                </div>
-                <div class="card m-1">
-                    <div class="card-body">x</div>
-                </div>
-                <div class="card m-1">
-                    <div class="card-body">x</div>
-                </div>
+
+                @endforeach
 
 
 
@@ -119,13 +111,14 @@
 
                 <div class="card-body">
 
-                    @foreach($exam['exam_questions'] as $question)
-
                     @if($exam['course']['user']['id'] != session('user')['id'])
 
                     <form id="paper-form" method="post">
 
                     @endif
+
+                    @foreach($exam['exam_questions'] as $question)
+                    <section id="question-{{$question['id']}}">
 
                         <div class="card mb-4 p-2">
                             <div class="card-body">
@@ -262,6 +255,8 @@
                         @else
 
                         <div class="row"><div class="col"><button class="btn btn-primary">SUBMIT</button></div></div>
+
+                    </section>
 
                     </form>
 
