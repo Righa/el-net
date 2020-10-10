@@ -99,6 +99,16 @@ class ForumsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $response = Http::withToken(session('miToken'))->delete('http://127.0.0.1:8000/api/forums/'.$id);
+
+        $res = $response->json();
+
+        if ($res['success']) {
+            session()->flash('success', $res['message']);
+
+        } else {
+            session()->flash('errors', $res['message']);
+        }
+        return redirect('home');
     }
 }

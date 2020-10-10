@@ -13,11 +13,11 @@
                         </div>
 
                         <div class="col-md-2">
-                            <img src="{{ $data['courses']['avatar_url'] }}" class="rounded" style="height: 144px; width: 144px">
+                            <img src="{{ $data['courses']['avatar_url'] ?? '/storage/course_avatars/image-placeholder.png' }}" class="rounded" style="height: 144px; width: 144px">
                         </div>
                         <div class="col">
                             <h1>{{ $data['courses']['name'] }}</h1>
-                            <img src="{{ $data['courses']['user']['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px"> {{ $data['courses']['user']['first_name'] }} {{ $data['courses']['user']['last_name'] }}<br><br>
+                            <img src="{{ $data['courses']['user']['avatar_url'] ?? '/storage/user_avatars/blank_profile_pic.png' }}" class="rounded-circle" style="height: 33px; width: 33px"> {{ $data['courses']['user']['first_name'] }} {{ $data['courses']['user']['last_name'] }}<br><br>
 
                             @if(session('user')['id'] == $data['courses']['user_id'])
 
@@ -72,27 +72,91 @@
 
                     @if($material['type'] == 'exam')
 
-                    <div class="card text-white bg-secondary mb-3">
+                    <div class="card bg-secondary text-warning mb-3">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <h4>Exam Name</h4>
+                                    <h4>{{$material['source']['name']}}</h4>
                                 </div>
                                 <div class="col">
-                                    Duration : xhrs
+                                    Duration : {{$material['source']['duration']}} minutes
                                 </div>
+
+
+                                @if(session('user')['id'] == $data['courses']['user_id'])
+
+                                 <div class="col-sm-2">
+                                    <a href="{{url('exams/'.$material['source']['id'])}} " class="btn btn-primary btn-block">EDIT</a>
+                                </div>
+
                                 <div class="col-sm-2">
-                                    <a href="" class="btn btn-primary btn-block">Attempt</a>
+
+                                    <form method="post" action="{{url('materials/'.$material['id'])}}">
+                                        @csrf
+                                        @method('delete')
+                                        <input type="hidden" name="course_id" value="{{$data['courses']['id']}}">
+                                        <button type="submit" class="btn btn-danger btn-block">DELETE</button>
+                                    </form>
+
                                 </div>
+
+                                @else
+
+                                <div class="col-md-4">
+                                    <form method="post" action="{{url('takes')}} ">
+                                        @csrf
+                                        <input type="hidden" name="course_id" value="{{$data['courses']['id']}}">
+                                        <input type="hidden" name="exam_id" value="{{$material['source']['id']}}">
+
+                                        <div class="input-group">
+                                          <input type="password" name="password" class="form-control" placeholder="password">
+                                          <div class="input-group-append">
+                                            <button type="submit" class="btn btn-primary btn-block">OPEN</button>
+                                          </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                @endif
                             </div>
                         </div>
                     </div>
 
                     @else
 
-                    <div href="" class="card mb-3">
+                    <div class="card mb-3">
                         <div class="card-body">
-                             <h5><span class="rounded p-2 w-25 border border-primary">{{$material['type']}}</span> <a href="{{$material['source']}}"> {{$material['name']}}</a></h5>
+                             <div class="row">
+                                 <div class="col-sm-1"><span class="rounded p-2 w-25 border border-primary">{{$material['type']}}</span></div>
+
+                                 <div class="col-md-6"><h5> <a href="{{url($material['source'])}}"> {{$material['name']}}</a></h5></div>
+
+                                 <div class="col">
+
+                                    <a href="{{url('materials/'.$material['id'])}}" class="btn btn-primary btn-block">DOWNLOAD</a>
+                                     
+                                 </div>
+
+                                @if(session('user')['id'] == $data['courses']['user_id'])
+
+                                 <div class="col">
+                                    <button data-toggle="collapse" data-target="#material{{$topic['id']}}-{{$material['id']}} " class="btn btn-primary btn-block">EDIT</button>
+                                </div>
+
+                                <div class="col">
+
+                                    <form method="post" action="{{url('materials/'.$material['id'])}}">
+                                        @csrf
+                                        @method('delete')
+                                        <input type="hidden" name="course_id" value="{{$data['courses']['id']}}">
+                                        <button type="submit" class="btn btn-danger btn-block">DELETE</button>
+                                    </form>
+
+                                </div>
+
+                                @endif
+
+                             </div>
                         </div>
                     </div>
 
@@ -102,21 +166,21 @@
 
                     @if(session('user')['id'] == $data['courses']['user_id'])
                     
-                    <div class="row">
+                    <div class="row p-2">
                         <div class="col"><button data-toggle="collapse" data-target="#material{{$topic['id']}}" class="btn btn-primary btn-block">+ Create New Material</button></div>
                         <div class="col"><button data-toggle="collapse" data-target="#tests{{$topic['id']}}" class="btn btn-primary btn-block">+ Create New Test</button></div>
-                    </div><br>
+                    </div>
                     <div id="material{{$topic['id']}}" class="row collapse">
                         <form class="col p-2" method="post" action="{{url('materials')}}" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="topic_id" value="{{$topic['id']}}">
                             <input type="hidden" name="course_id" value="{{$data['courses']['id']}}">
                             <div class="form-group">
-                                <label>File</label><br>
+                                <label><strong>File</strong></label><br>
                                 <input id="img-in" type="file" class="form-control" name="attachment" required>
                             </div>
                             <div class="form-group">
-                                <label>Name</label>
+                                <label><strong>Name</strong></label>
                                 <input type="text" name="name" class="form-control">
                             </div>
                             <div>
@@ -128,23 +192,63 @@
                     <div id="tests{{$topic['id']}}" class="row collapse">
                         <form class="col p-2" method="post" action="{{url('exams')}} ">
                             @csrf
+                            <input type="hidden" name="topic_id" value="{{$topic['id']}}">
+                            <input type="hidden" name="course_id" value="{{$data['courses']['id']}}">
                             <div class="form-group">
-                                <label>Name</label>
+                                <label><strong>Name</strong></label>
                                 <input type="text" name="name" class="form-control">
                             </div>
                             <div class="form-group">
-                                <label>Duration</label><br>
-                                <input id="img-in" type="number" class="form-control" name="duration">
+                                <label><strong>Duration(in minutes)</strong></label><br>
+                                <input type="number" class="form-control" name="duration">
                             </div>
                             <div class="form-group">
-                                <label>Password</label><br>
-                                <input id="img-in" type="password" class="form-control" name="password">
+                                <label><strong>Instructions</strong></label><br>
+                                <textarea class="form-control" name="instructions"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label><strong>Password</strong></label><br>
+                                <input type="password" class="form-control" name="password">
                             </div>
                             <div>
                                 <button type="submit" class="btn btn-primary">CREATE</button>
                             </div>
                         </form>
                     </div>
+
+                    <!-- edit forms -->
+
+
+
+                    @foreach($topic['material'] as $material)
+
+                    @if($material['type'] != 'exam')
+
+                    <div id="material{{$topic['id']}}-{{$material['id']}}" class="row collapse">
+                        <form class="col p-2" method="post" action="{{url('materials/'.$material['id'])}}" enctype="multipart/form-data">
+                            @csrf
+                            @method('patch')
+                            <input type="hidden" name="topic_id" value="{{$topic['id']}}">
+                            <input type="hidden" name="course_id" value="{{$data['courses']['id']}}">
+                            <!--<div class="form-group">
+                                <label><strong>File</strong></label><br>
+                                <input id="img-in" type="file" class="form-control" name="newattachment">
+                            </div>-->
+                            <div class="form-group">
+                                <label><strong>Name</strong></label>
+                                <input type="text" name="newname" class="form-control" value="{{$material['name']}} ">
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary">UPDATE</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    @endif
+
+                    @endforeach
+
+                    <!--end edit forms-->
 
                     @endif
 

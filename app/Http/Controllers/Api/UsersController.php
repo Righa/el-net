@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
-class ForumAnswerController extends Controller
+use App\User;
+
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,16 +20,6 @@ class ForumAnswerController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //invalid
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -35,20 +27,7 @@ class ForumAnswerController extends Controller
      */
     public function store(Request $request)
     {
-        $response = Http::withToken(session('miToken'))->post('http://127.0.0.1:8000/api/contributions', [
-            'forum_answer' => $request->answer,
-            'forum_id' => $request->forum_id
-        ]);
-
-        $res = $response->json();
-        
-        if ($res['success']) {
-            $request->session()->flash('success', $res['message']);
-        } else {
-            $request->session()->flash('errors', $res['message']);
-        }
-
-        return redirect('forums/'.$request->forum_id);
+        //invalid
     }
 
     /**
@@ -59,18 +38,7 @@ class ForumAnswerController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        //invalid
     }
 
     /**
@@ -82,7 +50,16 @@ class ForumAnswerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+        
+        $user->role = $request->role;
+
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User role changed to '.$user->role
+        ]);
     }
 
     /**
@@ -93,6 +70,11 @@ class ForumAnswerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        User::find($id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'user has been deleted'
+        ]);
     }
 }

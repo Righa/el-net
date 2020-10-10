@@ -17,6 +17,10 @@ class HomeController extends Controller
     {
         $response = Http::withToken(session('miToken'))->get('http://127.0.0.1:8000/api/midata');
         $res = $response->json();
+
+        if (session('user')['role'] == 'admin') {
+            return view('admin')->with('res', $res);
+        }
         return view('home')->with('res', $res);
     }
 }

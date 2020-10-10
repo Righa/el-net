@@ -28,10 +28,11 @@ Route::post('register', 'Api\AuthController@register');
 Route::group(['middleware' => 'jwtAuth'], function() {
 
 	/**
+	 * Index
 	 * Edit profile
-	 * 
 	 * logout
-	 */Route::get('midata', 'Api\IndexController@index');
+	 */
+	Route::get('midata', 'Api\IndexController@index');
 
 	Route::post('profile', 'Api\AuthController@profile');
 	Route::get('logout', 'Api\AuthController@logout');
@@ -40,6 +41,7 @@ Route::group(['middleware' => 'jwtAuth'], function() {
 	# standard routes group
 
 	Route::apiResources([
+		'users' => 'Api\UsersController',
 		'votes' => 'Api\VotesController',
 		'takes' => 'Api\TakesController',
 		'exams' => 'Api\ExamsController',
@@ -48,9 +50,10 @@ Route::group(['middleware' => 'jwtAuth'], function() {
 		'courses' => 'Api\CoursesController',
 		'subjects' => 'Api\SubjectsController',
 		'material' => 'Api\MaterialController',
-		//'reviews' => 'Api\ExamAnswerController',
+		'exam_answers' => 'Api\ExamAnswerController',
 		//'questions' => 'Api\QuestionsController',
 		'enrollment' => 'Api\EnrollmentController',
 		'contributions' => 'Api\ForumAnswersController',
+		'exam_questions' => 'Api\ExamQuestionController',
 	]);
 });

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+use App\ForumAnswer;
 use App\Vote;
 use DB;
 
@@ -30,12 +32,13 @@ class VotesController extends Controller
     {
         try {
 
-            $duplicate = DB::table('votes')->where(['user_id', Auth::id()], ['forum_answer_id', $request->forum_answer_id])->get();
+            $duplicate = DB::table('votes')->where(['user_id' => Auth::id(), 'forum_answer_id' => $request->forum_answer_id])->get();
 
-            if (!is_null($duplicate)) {
+            if (count($duplicate) != 0) {
                 return response([
                     'success' => false,
-                    'message' => 'you have already voted'
+                    'message' => 'you have already voted',
+                    'dup' => $duplicate
                 ]);
             }
 
@@ -46,6 +49,14 @@ class VotesController extends Controller
             $vote->value = $request->value;
 
             $vote->save();
+
+            //register with forum
+
+            $answer = ForumAnswer::find($request->forum_answer_id);
+
+            $answer->total_votes = $answer->total_votes + $request->value;
+
+            $answer->save();
 
         } catch (Exception $e) {
             

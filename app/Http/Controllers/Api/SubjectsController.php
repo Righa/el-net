@@ -125,7 +125,7 @@ class SubjectsController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'min:2|unique:subjects',
-            'description' => 'min:11',
+            'description' => 'min:5',
         ]);
 
         if ($validator->fails()) {
@@ -138,12 +138,10 @@ class SubjectsController extends Controller
 
         try {
 
-            $subject = Subject::find($id);
-
-            $changes = 2;
-            
-            ($request->name) ? $subject->name = $request->name : $changes--;
-            ($request->description) ? $subject->description = $request->description : $changes--;
+            $affected = Subject::find($id)->update([
+                'name' => $request->name,
+                'description' => $request->description
+            ]);
             
         } catch (Exception $e) {
             
@@ -157,7 +155,7 @@ class SubjectsController extends Controller
 
         return response([
             'success' => true,
-            'message' => $changes.' changes have been saved'
+            'message' => $affected.' changes have been saved'
         ]);
     }
 

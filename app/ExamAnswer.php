@@ -32,7 +32,7 @@ class ExamAnswer extends Model
      *
      * @return question
      */
-    public function question()
+    public function exam_question()
     {
         return $this->belongsTo(ExamQuestion::class);
     }

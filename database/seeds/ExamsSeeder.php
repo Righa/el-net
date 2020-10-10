@@ -12,12 +12,21 @@ class ExamsSeeder extends Seeder
     public function run()
     {
         for ($i=0; $i < 5; $i++) { 
+            $we = $i+1;
 
         DB::table('exams')->insert([
             'course_id' => '1',
             'name' => 'Good exam',
             'duration' => '60',
             'password' => 'password',
+        ]);
+
+        DB::table('materials')->insert([
+            'course_id' => '1',
+            'topic_id' => $i+1,
+            'name' => 'QUIZ'.(string)$we,
+            'type' => 'exam',
+            'source' => (string)$we,
         ]);
 
         DB::table('exam_questions')->insert([
@@ -35,6 +44,7 @@ class ExamsSeeder extends Seeder
         DB::table('takes')->insert([
             'user_id' => '1',
             'exam_id' => $i + 1,
+            'lapse' => date('Y-m-d H:m:s'),
         ]);
 
 

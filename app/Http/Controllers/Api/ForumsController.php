@@ -89,13 +89,28 @@ class ForumsController extends Controller
         $forum = Forum::find($id);
         $forum->subject;
         $forum->user;
-        $forum->user->avatar_url = Storage::url($forum->user->avatar_url);
+        if ($forum->user->avatar_url != null) {
+            $forum->user->avatar_url = Storage::url($forum->user->avatar_url);
+        }
+        
         $answers = $forum->forum_answers;
 
         foreach ($answers as $answer) {
             $answer->user;
             $answer->votes;
-            $answer->user->avatar_url = Storage::url($answer->user->avatar_url);
+
+            $total = 0;
+
+            foreach ($answer->votes as $vote) {
+                $total = $total + $vote->value;
+            }
+
+            $answer->total_votes = $total;
+
+            if ($answer->user->avatar_url != null) {
+                $answer->user->avatar_url = Storage::url($answer->user->avatar_url);
+            }
+            
         }
 
         return response()->json([

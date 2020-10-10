@@ -27,7 +27,6 @@
 
 
 
-
     <div id="allCourses" class=" tab-pane active"><br>
       <div class="card">
             <div class="card-header">
@@ -67,7 +66,7 @@
 
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-3"><img src="{{ $course['avatar_url'] }}" class="rounded" style="height: 99px; width: 99px"></div>
+                                <div class="col-sm-3"><img src="{{ $course['avatar_url'] ?? '/storage/course_avatars/image-placeholder.png' }}" class="rounded" style="height: 99px; width: 99px"></div>
 
                                 <div class="col">
                                     {{ $course['description'] }} 
@@ -77,7 +76,7 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col">
-                                    <img src="{{ $course['user']['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px"> {{ $course['user']['first_name'] }} {{ $course['user']['last_name'] }}
+                                    <img src="{{ $course['user']['avatar_url'] ?? '/storage/user_avatars/blank_profile_pic.png' }}" class="rounded-circle" style="height: 33px; width: 33px"> {{ $course['user']['first_name'] }} {{ $course['user']['last_name'] }}
                                 </div>
 
                                 <?php $regd = false; ?>
@@ -162,7 +161,7 @@
 
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-sm-3"><img src="{{ $course['course']['avatar_url'] }}" class="rounded" style="height: 99px; width: 99px"></div>
+                                <div class="col-sm-3"><img src="{{ $course['course']['avatar_url'] ?? '/storage/course_avatars/image-placeholder.png' }}" class="rounded" style="height: 99px; width: 99px"></div>
 
                                 <div class="col">
                                     {{ $course['course']['description'] }} 
@@ -172,7 +171,7 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col">
-                                    <img src="{{ $course['course']['user']['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px"> {{ $course['course']['user']['first_name'] }} {{ $course['course']['user']['last_name'] }}
+                                    <img src="{{ $course['course']['user']['avatar_url'] ?? '/storage/user_avatars/blank_profile_pic.png' }}" class="rounded-circle" style="height: 33px; width: 33px"> {{ $course['course']['user']['first_name'] }} {{ $course['course']['user']['last_name'] }}
                                 </div>
 
                                 <div class="col-md-3">
@@ -241,7 +240,7 @@
 
                         <div class="card" style="margin-bottom: 22px">
                             <div class="card-header">
-                                <img src="{{ $forum['user']['avatar_url'] }}" class="rounded-circle" style="height: 33px; width: 33px"><strong> {{ $forum['user']['first_name'] }} {{ $forum['user']['last_name'] }}:</strong>
+                                <img src="{{ $forum['user']['avatar_url'] ?? '/storage/user_avatars/blank_profile_pic.png' }}" class="rounded-circle" style="height: 33px; width: 33px"><strong> {{ $forum['user']['first_name'] }} {{ $forum['user']['last_name'] }}:</strong>
                             </div>
                             <div class="card-body">
                                 <div class="row">

@@ -23,16 +23,14 @@
             <div class="card">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <a href="{{ url('home')}}" class="btn btn-outline-danger btn-block btn-sm"><h4>&lt</h4></a>
                         </div>
-                        <div class="col"><h2>EDIT PROFILE</h2></div>
+                        <div class="col p-2"><h3>EDIT PROFILE</h3></div>
                     </div>
-                </div>
-                <div class="card-body">
 
                     @if(Session::has('success'))
-                    <div class="alert alert-success">
+                    <br><div class="alert alert-success">
                         {{session('success')}}
                     </div>
                     @endif
@@ -42,12 +40,15 @@
                         {{session('errors')}}
                     </div>
                     @endif
+
+                </div>
+                <div class="card-body">
                     <form method="post" action="{{url('profile')}} " enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group">
                             <label>Avatar:</label><br>
-                            <img id="avatar-btn" onclick="transferClick()" alt="click to add image" class="img-thumbnail rounded-circle w-25" src="{{session('user')['avatar_url'] }}">
+                            <img id="avatar-btn" onclick="transferClick()" alt="click to add image" class="img-thumbnail rounded-circle w-25" src="{{session('user')['avatar_url'] ?? '/storage/user_avatars/blank_profile_pic.png' }}">
                             <input id="img-in" onchange="displayImg(this)" style="display: none;" type="file" name="avatar">
                         </div>
                         <div class="form-group">

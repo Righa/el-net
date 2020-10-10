@@ -17,6 +17,7 @@ class CreateExamsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('course_id');
             $table->string('name');
+            $table->string('instructions', 666)->default('Good luck!!');
             $table->integer('duration');
             $table->string('password');
             $table->timestamps();

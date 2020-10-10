@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Activity;
+use DB;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -46,7 +48,16 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        $user->avatar_url = Storage::url($user->avatar_url);
+        $activity = new Activity;
+
+        $activity->user_id = Auth::id();
+        $activity->active = true;
+
+        $activity->save();
+
+        if ($user->avatar_url != null) {
+            $user->avatar_url = Storage::url($user->avatar_url);
+        }
 
     	return response()->json([
     		'success' => true,
@@ -113,7 +124,7 @@ class AuthController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'birthday' => 'date',
+            //'birthday' => 'date',
             'first_name' => 'min:2',
             'last_name' => 'min:2',
         ]);
@@ -161,7 +172,9 @@ class AuthController extends Controller
             ]);
         }
 
-        $user->avatar_url = Storage::url($user->avatar_url);
+        if ($user->avatar_url != null) {
+            $user->avatar_url = Storage::url($user->avatar_url);
+        }
             
         return response()->json([
             'success' => true,
@@ -229,6 +242,8 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+        Activity::where('user_id', Auth::id())->where('active', true)->update(['active' => false]);
+        
         JWTAuth::invalidate(JWTAuth::parseToken($request->token));
         return response()->json([
             'success' => true,

@@ -67,7 +67,7 @@ class CoursesController extends Controller
             return redirect('home');
         } else {
             $request->session()->flash('errors', $res['message']);
-            return view('newcourse');
+            return redirect('courses/create');
         }
     }
 

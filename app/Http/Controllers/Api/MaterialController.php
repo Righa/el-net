@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Material;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Material;
+use App\Exam;
 
 class MaterialController extends Controller
 {
@@ -117,12 +118,15 @@ class MaterialController extends Controller
                 Storage::delete($material->source);
                 $path = $request->material->store('public/material_repo');
                 $material->source = $path;
+                $material->type = $request->material->extension();
 
             } else {
                 $changes--;
             }
             
             ($request->name) ? $material->name = $request->name : $changes--;
+
+            $material->save();
             
         } catch (Exception $e) {
             
@@ -149,6 +153,10 @@ class MaterialController extends Controller
         try {
 
             $material = Material::find($id);
+
+            if ($material->type == 'exam') {
+                Exam::find($material->source)->delete();
+            }
 
             Storage::delete($material->source);
 

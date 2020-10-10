@@ -17,7 +17,7 @@ class CreateForumAnswersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('forum_id');
-            $table->string('answer');
+            $table->string('answer', 666);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
